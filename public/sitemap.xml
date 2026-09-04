@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1"
+        xmlns:video="http://www.google.com/schemas/sitemap-video/1.1">
+  <!-- HOME -->
+  <url><loc>https://qbot.now/</loc><lastmod>2026-04-13</lastmod><changefreq>weekly</changefreq><priority>1.0</priority></url>
+
+  <!-- CORE PAGES -->
+  <url><loc>https://qbot.now/products</loc><lastmod>2026-04-13</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://qbot.now/hardware</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://qbot.now/pricing</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://qbot.now/3-in-1</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/custom-pos</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/build</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/video</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.5</priority></url>
+
+  <!-- PRODUCTS — SELLING CHANNELS -->
+  <url><loc>https://qbot.now/products/pos</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/mpos</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/kiosk</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/webstore</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/tablet</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/qr-order</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- PRODUCTS — MANAGE & OPERATE -->
+  <url><loc>https://qbot.now/products/qhub</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/inventory</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/kitchen-display</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/qms</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/live-display</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- PRODUCTS — GROW -->
+  <url><loc>https://qbot.now/products/loyalty</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/sales-boosters</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/ai-insights</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- WHY QPOS -->
+  <url><loc>https://qbot.now/why-q/pos-quality</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/why-q/grow-sales</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/why-q/easy-to-manage</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/why-q/sell-everywhere</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- FREE TOOLS -->
+  <url><loc>https://qbot.now/tools</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/tools/qr-generator</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://qbot.now/tools/review-qr</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://qbot.now/tools/menu-qr</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://qbot.now/tools/wa-booking</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://qbot.now/tools/wa-order</loc><lastmod>2026-04-13</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+
+  <!-- STUDIO — FITNESS & WELLNESS -->
+  <url><loc>https://qbot.now/qstudio</loc><lastmod>2026-06-11</lastmod><changefreq>weekly</changefreq><priority>0.9</priority></url>
+  <url><loc>https://qbot.now/qstudio/pricing</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/qstudio/pricing/themepark</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/qstudio/guide-for-gyms</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- QPOS — COMBINED SECTION PAGES -->
+  <url><loc>https://qbot.now/products/sell</loc><lastmod>2026-06-28</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://qbot.now/products/manage</loc><lastmod>2026-06-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/products/operate</loc><lastmod>2026-06-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+  <url><loc>https://qbot.now/products/grow</loc><lastmod>2026-06-28</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- QSENTRY AI — ANTI-TAILGATER CAMERA
+       Image + video extensions: the demo clip and the captured-tailgater frame are
+       the most persuasive assets on the page, and this is what gets them into
+       Google Images and video results rather than only the HTML page. -->
+  <url>
+    <loc>https://qbot.now/qsentry</loc>
+    <lastmod>2026-08-10</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+    <image:image>
+      <image:loc>https://qbot.now/qsentry_img/sentrysharer.jpg</image:loc>
+      <image:title>QSentry AI — anti-tailgating AI CCTV camera for gyms</image:title>
+      <image:caption>Malaysia's first anti-tailgating AI CCTV camera for gyms, by QBot.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://qbot.now/qsentry_img/sentryrealfootage.jpg</image:loc>
+      <image:title>QSentry AI catching a tailgater at a gym turnstile</image:title>
+      <image:caption>Real captured footage: the detection box flags a second person entering on one tap.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://qbot.now/qsentry_img/qsentryai-specs.jpg</image:loc>
+      <image:title>QSentry AI specifications</image:title>
+      <image:caption>21.5" FHD display, 4K wide-angle camera, red/green alert light, wall or ceiling mount.</image:caption>
+    </image:image>
+    <image:image>
+      <image:loc>https://qbot.now/qsentry_img/sentryphone.png</image:loc>
+      <image:title>QSentry AI tailgating alert on a mobile phone</image:title>
+      <image:caption>Date, time, photo and video of the tailgating event, sent to the owner's phone.</image:caption>
+    </image:image>
+    <video:video>
+      <video:thumbnail_loc>https://qbot.now/qsentry_img/qsentry-poster.jpg</video:thumbnail_loc>
+      <video:title>QSentry AI catching a gym tailgater in real time</video:title>
+      <video:description>Live footage from a Malaysian gym: a second person follows a member through the turnstile and QSentry AI flags the tailgating event, triggers the alarm and captures photo and video proof.</video:description>
+      <video:content_loc>https://qbot.now/qsentry_img/qsentry-video.mp4</video:content_loc>
+      <video:family_friendly>yes</video:family_friendly>
+      <video:live>no</video:live>
+    </video:video>
+  </url>
+
+  <!-- PROPERTY -->
+  <url><loc>https://qbot.now/qprop</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.8</priority></url>
+
+  <!-- MORE PRODUCTS -->
+  <url><loc>https://qbot.now/qkiosk-lite</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- GUIDES & CONTENT -->
+  <url><loc>https://qbot.now/pos-buying-guide</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.7</priority></url>
+
+  <!-- COMPANY -->
+  <url><loc>https://qbot.now/about-us</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://qbot.now/contact-us</loc><lastmod>2026-06-11</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+</urlset>

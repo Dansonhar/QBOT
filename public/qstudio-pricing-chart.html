@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="robots" content="noindex, nofollow" />
+<title>QStudio — Pricing &amp; Features</title>
+<style>
+  :root {
+    --lime: #CCFF00;
+    --band: #5eb3a8;
+    --check: #1f6b00;
+    --ink: #0a0a0a;
+    --muted: #6b7280;
+    --line: #e5e7eb;
+  }
+  * { box-sizing: border-box; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  html, body { margin: 0; padding: 0; background: #f3f4f6; color: var(--ink); }
+  body {
+    font-family: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; }
+
+  /* ── Toolbar (screen only) ── */
+  .toolbar {
+    position: sticky; top: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding: 14px 20px; background: #fff; border-bottom: 2px solid var(--ink);
+  }
+  .toolbar .hint { font-size: 12px; color: var(--muted); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--ink); color: #fff; border: 0; cursor: pointer;
+    font-weight: 800; text-transform: uppercase; letter-spacing: .04em; font-size: 13px;
+    padding: 11px 18px; border-radius: 2px;
+  }
+  .btn:hover { opacity: .9; }
+  .btn svg { width: 16px; height: 16px; }
+
+  /* ── Sheet ── */
+  .sheet {
+    max-width: 1100px; margin: 24px auto; background: #fff;
+    border: 1px solid var(--line); box-shadow: 0 10px 40px rgba(0,0,0,.08);
+    padding: 32px 36px 40px;
+  }
+  .head { display: flex; align-items: flex-end; justify-content: space-between; gap: 24px; margin-bottom: 22px; }
+  .brand { font-size: 30px; font-weight: 900; letter-spacing: -.02em; line-height: 1; }
+  .brand .dot { color: var(--check); }
+  .sub { font-size: 13px; color: var(--muted); margin-top: 8px; max-width: 520px; line-height: 1.5; }
+  .tagpill {
+    display: inline-block; background: var(--lime); color: #000;
+    font-weight: 900; text-transform: uppercase; letter-spacing: .06em; font-size: 11px;
+    padding: 6px 10px; white-space: nowrap;
+  }
+
+  /* ── Table ── */
+  .wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; min-width: 720px; }
+
+  thead th { vertical-align: bottom; border-bottom: 2px solid var(--ink); padding: 10px 8px; }
+  th.feat-h {
+    text-align: left; width: 32%;
+    font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: .12em; color: var(--muted);
+  }
+  th.tier { text-align: center; vertical-align: top; background: #fff; }
+  th.tier.pop { background: var(--ink); }
+  .tier-name { font-size: 13px; font-weight: 900; text-transform: uppercase; line-height: 1; margin-bottom: 4px; }
+  .tier-price { font-size: 22px; font-weight: 900; line-height: 1; }
+  .tier-cycle { font-size: 9px; color: var(--muted); margin-top: 3px; }
+  .tier-cap { font-size: 10px; color: var(--muted); margin-top: 6px; line-height: 1.3; min-height: 26px; }
+  th.tier.pop .tier-name, th.tier.pop .tier-price { color: #fff; }
+  th.tier.pop .tier-cycle, th.tier.pop .tier-cap { color: rgba(255,255,255,.7); }
+  .badge-slot { height: 20px; display: flex; align-items: center; justify-content: center; margin-bottom: 4px; }
+  .badge {
+    background: var(--lime); color: #000; white-space: nowrap;
+    font-size: 8px; font-weight: 900; text-transform: uppercase; letter-spacing: .08em;
+    padding: 3px 8px; border-radius: 2px;
+  }
+
+  tr.group td {
+    background: var(--band); color: #fff;
+    font-size: 10px; font-weight: 900; text-transform: uppercase; letter-spacing: .16em;
+    padding: 6px 12px;
+  }
+  tbody td { border-bottom: 1px solid #f1f1f1; padding: 7px 8px; }
+  td.feat { font-size: 12px; color: #1f2937; font-weight: 500; }
+  td.cell { text-align: center; }
+  tbody tr.row:hover td { background: #fafafa; }
+  td.cell.pop { background: rgba(0,0,0,.04); }
+
+  .ck { color: var(--check); font-weight: 900; font-size: 15px; line-height: 1; }
+  .no { color: #d1d5db; font-size: 13px; }
+  .val { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: -.01em; color: #000; }
+  .val.soon { color: var(--muted); font-style: italic; font-weight: 600; text-transform: none; }
+
+  .foot { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); font-size: 11px; color: var(--muted); line-height: 1.6; }
+  .foot strong { color: var(--ink); }
+
+  /* ── Print ── */
+  @page { size: A4 landscape; margin: 9mm; }
+  @media print {
+    html, body { background: #fff; }
+    .no-print { display: none !important; }
+    .sheet { max-width: none; margin: 0; border: 0; box-shadow: none; padding: 0; }
+    table { min-width: 0; font-size: 9px; }
+    thead { display: table-header-group; }      /* repeat header each page */
+    tr.row, tr.group { break-inside: avoid; }
+    .tier-price { font-size: 16px; }
+    td.feat { font-size: 9.5px; }
+    .head { margin-bottom: 12px; }
+  }
+</style>
+</head>
+<body>
+
+  <div class="toolbar no-print">
+    <div class="hint">Tip: in the print dialog choose <strong>Save as PDF</strong> · Layout <strong>Landscape</strong> · Margins <strong>Default</strong> · enable <strong>Background graphics</strong>.</div>
+    <button class="btn" onclick="window.print()">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+      Export as PDF
+    </button>
+  </div>
+
+  <div class="sheet">
+    <div class="head">
+      <div>
+        <div class="brand">QStudio<span class="dot">.</span> Pricing</div>
+        <div class="sub">Every plan is <strong>billed annually</strong> (paid once per year — monthly equivalent shown). Each higher tier includes everything below it. No long-term lock-in — upgrade or downgrade anytime.</div>
+      </div>
+      <div class="tagpill">All prices in RM · excl. 8% SST</div>
+    </div>
+
+    <div class="wrap">
+      <table id="chart"><thead></thead><tbody></tbody></table>
+    </div>
+
+    <div class="foot">
+      <strong>*Some features may require additional activation fees or usage fees.</strong><br/>
+      <strong>Additional POS Device per outlet:</strong> RM69/mth (first device included in subscription)<br/>
+      <strong>Additional Outlet:</strong> RM299/mth with separate reporting (Enterprise: separate pricing)<br/>
+      <strong>QStudio</strong> — all-in-one studio &amp; wellness management. Pricing valid at time of issue and subject to change.
+      Token-based features (Email / WhatsApp blast) are charged per send. Items marked <em>Coming Soon</em> are on the roadmap.
+    </div>
+  </div>
+
+<script>
+  // Tier columns — RM99 "Starter" intentionally excluded from this chart.
+  // level keys map to each feature row's cell array.
+  const TIERS = [
+    { level: 'standard',   name: 'Standard',   price: 299,  caption: 'For growing studios' },
+    { level: 'pro',        name: 'Pro',        price: 499,  caption: 'Scale with marketing & ticketing', popular: true },
+    { level: 'advanced',   name: 'Advanced',   price: 699,  caption: 'Loyalty, rewards & automation' },
+    { level: 'enterprise', name: 'Enterprise', price: 2699, caption: 'Chains, hotels & wellness groups' },
+  ];
+
+  // Cell value per [standard, pro, advanced, enterprise].
+  // true = included · false = not included · string = custom value.
+  const c = (st, p, a, e) => ({ standard: st, pro: p, advanced: a, enterprise: e });
+
+  const GROUPS = [
+    { title: 'Platforms', rows: [
+      { f: 'Own Laptop / PC',      cells: c(true, true, true, true) },
+      { f: 'Counter POS',          cells: c(true, true, true, true) },
+      { f: 'Self-Service Kiosk',   cells: c(false, true, true, true) },
+      { f: 'Webstore',             cells: c(false, true, true, true) },
+      { f: 'QR',                   cells: c(false, true, true, true) },
+      { f: 'Studio App',           cells: c(true, true, true, true) },
+      { f: 'Branded App (*additional charge)', cells: c(false, false, true, true) },
+    ]},
+    { title: 'Reporting', rows: [
+      { f: 'All-in-one Dashboard',       cells: c(true, true, true, true) },
+      { f: 'Sales & Finance Reports',    cells: c(true, true, true, true) },
+      { f: 'Data Export',                cells: c(true, true, true, true) },
+      { f: 'Payment System',             cells: c(true, true, true, true) },
+      { f: 'Data Analytics',             cells: c(true, true, true, true) },
+      { f: 'AI Insights',                cells: c(false, false, true, true) },
+      { f: 'Products Management',        cells: c('50 products', '200 products', 'Unlimited', 'Unlimited') },
+    ]},
+    { title: 'Membership', rows: [
+      { f: 'Recurring Member Payment',     cells: c(true, true, true, true) },
+      { f: 'Member Profile Setup',         cells: c(true, true, true, true) },
+      { f: 'QR Code Check-in',             cells: c(true, true, true, true) },
+      { f: 'Face ID Check-in',             cells: c(false, true, true, true) },
+      { f: 'E-Agreement Sign Feature',     cells: c(false, true, true, true) },
+      { f: 'Door Access / Turnstile Mgmt', cells: c(false, true, true, true) },
+      { f: 'Family / Bundle Pass',         cells: c(false, false, true, true) },
+      { f: 'Members',                      cells: c('1,000', '3,000', 'Unlimited', 'Unlimited') },
+      { f: 'Franchise Model',              cells: c(false, false, false, 'Customized') },
+    ]},
+    { title: 'Staff', rows: [
+      { f: 'Staff Check-in System',  cells: c(true, true, true, true) },
+      { f: 'Timesheet',              cells: c(true, true, true, true) },
+      { f: 'Activity Log',           cells: c(true, true, true, true) },
+      { f: 'Staff Commissions Mgmt', cells: c(false, false, true, true) },
+      { f: 'Staff Accounts',         cells: c('10 staff', 'Unlimited', 'Unlimited', 'Unlimited') },
+    ]},
+    { title: 'Booking & Schedule', rows: [
+      { f: 'Schedule Classes & Facilities', cells: c(true, true, true, true) },
+      { f: 'Pricing Plan Management',       cells: c(true, true, true, true) },
+      { f: 'Calendar-Based Scheduler',      cells: c(true, true, true, true) },
+      { f: 'Member Booking via App/Web',    cells: c(false, true, true, true) },
+      { f: 'Customized Rules',              cells: c(false, true, true, true) },
+    ]},
+    { title: 'Marketing', rows: [
+      { f: 'Leads Management', cells: c(false, true, true, true) },
+      { f: 'Email Blast',      cells: c(false, true, true, true) },
+      { f: 'WhatsApp Blast',   cells: c(false, false, true, true) },
+    ]},
+    { title: 'Loyalty & Rewards', rows: [
+      { f: 'Voucher Management', cells: c(false, true, true, true) },
+      { f: 'Points & Rewards',   cells: c(false, false, true, true) },
+    ]},
+    { title: 'Ticketing', rows: [
+      { f: 'QR Tickets',            cells: c(false, true, true, true) },
+      { f: 'Face Check-in Tickets', cells: c(false, true, true, true) },
+      { f: 'Time-Based Tickets',    cells: c(false, false, true, true) },
+      { f: 'Advanced Tickets',      cells: c(false, false, true, true) },
+    ]},
+    { title: 'Inventory System', rows: [
+      { f: 'Supplier Management', cells: c(false, true, true, true) },
+      { f: 'Stock Management',    cells: c(false, true, true, true) },
+      { f: 'Stock Items',         cells: c(false, 'Unlimited', 'Unlimited', 'Unlimited') },
+    ]},
+    { title: 'Integrations', rows: [
+      { f: 'Class Pass Integration',              cells: c('Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon') },
+      { f: 'Customized Integration',              cells: c('Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon') },
+      { f: 'Vending Machine Integration',         cells: c('Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon') },
+      { f: 'Body Composition Monitor Integration', cells: c('Coming Soon', 'Coming Soon', 'Coming Soon', 'Coming Soon') },
+      { f: 'Customized Modules (*one-time fees)', cells: c(false, false, true, true) },
+      { f: 'Multi-brands',                        cells: c(false, false, false, true) },
+      { f: 'IoT (Lighting, Aircond, etc.)',       cells: c(false, false, false, true) },
+    ]},
+    { title: 'Push Notifications — Internal', rows: [
+      { f: 'Daily Sales Report',               cells: c(true, true, true, true) },
+      { f: 'Check-in Report',                  cells: c(true, true, true, true) },
+      { f: 'Abnormal Check-in',                cells: c(false, true, true, true) },
+      { f: 'Expiring Members',                 cells: c(false, true, true, true) },
+      { f: 'Low Sales Alert',                  cells: c(false, false, true, true) },
+      { f: 'Branch Performance Summary',       cells: c(false, false, true, true) },
+      { f: 'Top Selling Services / Products',  cells: c(false, false, true, true) },
+      { f: 'Staff Late Notifications',         cells: c(false, false, true, true) },
+      { f: 'Customized Notifications',         cells: c(false, false, false, true) },
+    ]},
+    { title: 'Push Notifications — Customers', rows: [
+      { f: 'Expiring Membership Reminder',     cells: c(false, true, true, true) },
+      { f: 'Class Reminder',                   cells: c(false, true, true, true) },
+      { f: 'Birthday Reminder',                cells: c(false, false, true, true) },
+      { f: 'Customized Reminders',             cells: c(false, false, true, true) },
+    ]},
+    { title: 'Support', rows: [
+      { f: 'Ticketing Support',          cells: c(true, true, true, true) },
+      { f: 'Dedicated WhatsApp Support', cells: c(false, false, true, true) },
+      { f: 'VIP Support',                cells: c(false, false, false, true) },
+    ]},
+  ];
+
+  function cellHTML(v) {
+    if (v === true)  return '<span class="ck">&#10003;</span>';
+    if (v === false || v == null || v === '') return '<span class="no">&times;</span>';
+    const soon = String(v).toLowerCase() === 'coming soon';
+    return '<span class="val' + (soon ? ' soon' : '') + '">' + v + '</span>';
+  }
+
+  // Header
+  let thead = '<tr><th class="feat-h">Compare Features</th>';
+  for (const t of TIERS) {
+    thead += '<th class="tier' + (t.popular ? ' pop' : '') + '">'
+      + '<div class="badge-slot">' + (t.popular ? '<span class="badge">★ Most Popular</span>' : '') + '</div>'
+      + '<div class="tier-name">' + t.name + '</div>'
+      + '<div class="tier-price">RM' + t.price + '</div>'
+      + '<div class="tier-cycle mono">/mo · billed annually</div>'
+      + '<div class="tier-cap">' + t.caption + '</div>'
+      + '</th>';
+  }
+  thead += '</tr>';
+  document.querySelector('#chart thead').innerHTML = thead;
+
+  // Body
+  let tb = '';
+  for (const g of GROUPS) {
+    tb += '<tr class="group"><td colspan="' + (TIERS.length + 1) + '">' + g.title + '</td></tr>';
+    for (const r of g.rows) {
+      tb += '<tr class="row"><td class="feat">' + r.f + '</td>';
+      for (const t of TIERS) {
+        tb += '<td class="cell' + (t.popular ? ' pop' : '') + '">' + cellHTML(r.cells[t.level]) + '</td>';
+      }
+      tb += '</tr>';
+    }
+  }
+  document.querySelector('#chart tbody').innerHTML = tb;
+</script>
+</body>
+</html>

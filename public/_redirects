@@ -1,0 +1,6 @@
+# Admin panel routing
+/admincms /index.html 200
+/admincms/ /index.html 200
+
+# SPA fallback - all other routes go to index.html
+/* /index.html 200

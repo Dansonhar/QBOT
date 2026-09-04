@@ -1,0 +1,37 @@
+User-agent: *
+Allow: /
+Disallow: /admincms
+Disallow: /admincms/
+Disallow: /m/
+Disallow: /r/
+Disallow: /b/
+Disallow: /freetools/
+Disallow: /tools/wa-order/login
+Disallow: /tools/wa-order/signup
+Disallow: /tools/wa-order/dashboard
+Disallow: /quotesys
+Disallow: /quotesys/
+Disallow: /qref
+Disallow: /qref/
+Disallow: /hq
+Disallow: /hq/
+Disallow: /qsecurity
+Disallow: /qsecurity/
+Disallow: /vipcare
+Disallow: /vipcare/
+Disallow: /qstudio/vipcare
+Disallow: /qstudio/vipcare/
+Disallow: /qstudio/growthpartner
+Disallow: /qstudio/growthpartner/
+Disallow: /qstudio/growthquote
+Disallow: /qstudio/growthquote/
+Disallow: /qstudio/proposal
+Disallow: /qstudio/proposal/
+Disallow: /qstudio/presentation
+Disallow: /qstudio/presentation/
+Disallow: /qstudio/presentations
+Disallow: /qstudio/presentations/
+# /qstudio/intro is intentionally crawlable so link previews (WhatsApp/FB) work;
+# it carries a noindex meta tag, so it stays out of search results.
+
+Sitemap: https://qbot.now/sitemap.xml
