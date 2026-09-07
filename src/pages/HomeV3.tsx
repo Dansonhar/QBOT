@@ -48,7 +48,6 @@ function Hero() {
         <img
           src="/qpos-keyvisuals/hero-3in1.webp"
           alt="QBOT V3 MIX shown in counter, kiosk and handheld modes"
-          fetchPriority="high"
           decoding="async"
           className="h-full w-full object-cover object-center opacity-[0.72] scale-105"
         />
@@ -387,12 +386,38 @@ function Surfaces() {
 }
 
 /* ═══════════════ 06 · V3 MIX ═══════════════ */
+/** One device, one working day — each mode is a different hour of the shift. */
+const MODES = [
+  {
+    verb: 'Dock it',
+    role: 'Counter POS',
+    when: 'Morning open',
+    copy: 'Sits in the dock as the main register — shifts, split bills, printed receipts, orders firing straight to the kitchen.',
+  },
+  {
+    verb: 'Undock it',
+    role: 'Handheld mPOS',
+    when: 'Lunch rush',
+    copy: 'Lift it off the dock and keep selling — tableside ordering, queue busting, events and night markets.',
+  },
+  {
+    verb: 'Mount it',
+    role: 'Self-service kiosk',
+    when: 'After hours',
+    copy: 'Wall or stand mounted, screen turned around. Customers browse, order and pay themselves — no one on the counter.',
+  },
+];
+
+const DEVICE_SPECS = [
+  ['Display', '10.1" HD touch'],
+  ['Printer', 'Built-in 80mm'],
+  ['Payment', 'NFC · chip · swipe'],
+  ['Network', 'WiFi · 4G · BT'],
+  ['Battery', 'Full shift'],
+  ['Offline', 'Keeps selling'],
+];
+
 function Device() {
-  const modes = [
-    ['Dock it', 'Counter POS'],
-    ['Undock it', 'Handheld mPOS'],
-    ['Mount it', 'Self-service kiosk'],
-  ];
   return (
     <section className="relative overflow-hidden bg-black text-white">
       <div className="absolute inset-0">
@@ -421,21 +446,49 @@ function Device() {
             />
           </Reveal>
 
+          {/* the three modes, each with the job it does */}
           <div className="mt-2 grid md:grid-cols-3">
-            {modes.map(([verb, role], k) => (
-              <Reveal key={verb} delay={k * 110} className="hairline-inv py-7 md:pr-8">
-                <div className="t-num text-xs text-white/30">{String(k + 1).padStart(2, '0')}</div>
-                <div className="t-h3 mt-2">{verb}</div>
-                <div className="t-label mt-1.5 text-white/45">{role}</div>
+            {MODES.map((m, k) => (
+              <Reveal key={m.verb} delay={k * 110} className="hairline-inv py-7 md:pr-10">
+                <div className="flex items-baseline gap-3">
+                  <span className="t-num text-xs text-white/30">{String(k + 1).padStart(2, '0')}</span>
+                  <span className="t-label text-white/30">{m.when}</span>
+                </div>
+                <div className="t-h3 mt-3">{m.verb}</div>
+                <div className="t-label mt-1.5 text-white/45">{m.role}</div>
+                <p className="mt-4 max-w-sm text-[15px] leading-[1.62] text-white/55">{m.copy}</p>
               </Reveal>
             ))}
           </div>
 
-          <Reveal delay={200} className="mt-10">
-            <Link to="/3-in-1" className="t-label inline-block border border-white/25 px-7 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
-              Explore the V3 MIX
-            </Link>
+          {/* hardware facts — the answer to "but what is it, actually" */}
+          <Reveal delay={140} className="hairline-inv mt-12 pt-9">
+            <div className="t-label mb-7 text-white/30">In the box</div>
+            <div className="grid grid-cols-2 gap-x-8 gap-y-7 sm:grid-cols-3 lg:grid-cols-6">
+              {DEVICE_SPECS.map(([label, value]) => (
+                <div key={label}>
+                  <div className="t-label text-white/35">{label}</div>
+                  <div className="mt-2 text-[15px] leading-snug text-white">{value}</div>
+                </div>
+              ))}
+            </div>
           </Reveal>
+
+          {/* close — the argument, then the way out of the section */}
+          <div className="hairline-inv mt-12 grid gap-8 pt-9 md:grid-cols-[1fr_auto] md:items-center">
+            <Reveal delay={160} className="t-body max-w-xl text-white/55">
+              Counter to handheld to kiosk in seconds — no second machine, no reconfiguration,
+              no extra licence. One device to buy, one system to train on, one bill to pay.
+            </Reveal>
+            <Reveal delay={220} className="flex flex-wrap items-center gap-4">
+              <Link to="/3-in-1" className="t-label inline-block border border-white/25 px-7 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
+                Explore the V3 MIX
+              </Link>
+              <Link to="/hardware" className="t-label inline-block py-4 text-white/50 transition-colors hover:text-white">
+                See all hardware
+              </Link>
+            </Reveal>
+          </div>
         </div>
       </div>
     </section>
@@ -663,6 +716,13 @@ function Hardware() {
 }
 
 /* ═══════════════ 11 · CREDIBILITY ═══════════════ */
+/* Coordinates cross-checked against two public sources for Publika / Solaris
+   Dutamas (3.170608,101.665925 and 3.171188,101.665757); the embed itself is
+   queried by address so the pin is resolved by Google, not by us. */
+const GPS = { lat: '3.1712\u00B0', lng: '101.6658\u00B0' };
+const MAP_EMBED =
+  'https://www.google.com/maps?q=Solaris+Dutamas+Publika,+Jalan+Dutamas+1,+50480+Kuala+Lumpur&z=16&output=embed';
+
 function Showroom() {
   const MAPS = 'https://www.google.com/maps/search/?api=1&query=Solaris+Dutamas+Publika+Kuala+Lumpur';
   return (
@@ -678,20 +738,44 @@ function Showroom() {
         </div>
       </div>
 
-      {/* full-bleed photograph — the composition break */}
-      <Reveal mask className="mt-16 md:mt-20">
-        <a href={MAPS} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden">
-          <img
-            src="/qbotshowroom.jpg"
-            alt="QBot showroom at Solaris Dutamas, Publika Kuala Lumpur"
-            width={1376}
-            height={768}
+      {/* full-bleed: the room on the left, the pin on the right */}
+      <div className="mt-16 grid md:mt-20 lg:grid-cols-2">
+        <Reveal mask curtain="paper" className="overflow-hidden">
+          <a href={MAPS} target="_blank" rel="noopener noreferrer" className="group block overflow-hidden">
+            <img
+              src="/qbotshowroom.jpg"
+              alt="QBot showroom at Solaris Dutamas, Publika Kuala Lumpur"
+              width={1376}
+              height={768}
+              loading="lazy"
+              decoding="async"
+              className="h-[45vh] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03] lg:h-[62vh]"
+            />
+          </a>
+        </Reveal>
+
+        <Reveal delay={140} className="relative h-[45vh] bg-black lg:h-[62vh]">
+          <iframe
+            title="Map showing the QBot showroom at Solaris Dutamas, Publika, Kuala Lumpur"
+            src={MAP_EMBED}
             loading="lazy"
-            decoding="async"
-            className="h-[45vh] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03] md:h-[70vh]"
+            referrerPolicy="no-referrer-when-downgrade"
+            className="absolute inset-0 h-full w-full border-0"
           />
-        </a>
-      </Reveal>
+
+          {/* GPS readout — mono, sits over the map without blocking it */}
+          <div className="pointer-events-none absolute bottom-14 left-5 bg-black/85 px-5 py-4 backdrop-blur-sm">
+            <div className="t-label text-white/45">Showroom · GPS</div>
+            <div className="t-num mt-2 text-[15px] font-medium leading-tight text-white">
+              {GPS.lat}<span className="text-white/40"> N</span>
+            </div>
+            <div className="t-num text-[15px] font-medium leading-tight text-white">
+              {GPS.lng}<span className="text-white/40"> E</span>
+            </div>
+            <div className="t-label mt-2.5 text-white/35">Publika · Kuala Lumpur</div>
+          </div>
+        </Reveal>
+      </div>
 
       <div className="mx-auto max-w-[1500px] px-6 pb-24 md:px-10 md:pb-36 lg:px-16">
         <div className="grid gap-px bg-[var(--rule)] md:grid-cols-3">

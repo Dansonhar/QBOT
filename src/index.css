@@ -214,6 +214,10 @@
   --ink: #000000;
   --paper: #FAFAF8;
   --paper-pure: #FFFFFF;
+  /* Pre-mixed translucent paper for the frosted nav bar. Tailwind v3 can't
+     do bg-[var(--paper)]/95 — an opacity modifier on a hex-valued var emits
+     invalid CSS and the declaration is dropped, leaving the bar transparent. */
+  --paper-95: rgba(250, 250, 248, 0.95);
   --g-90: #0A0A0A;
   --g-70: #1A1A1A;
   --g-50: #3D3D3D;
@@ -260,9 +264,24 @@
 }
 .v3 [data-reveal].is-in { opacity: 1; transform: translate3d(0, 0, 0); }
 
-/* Mask/clip reveal for imagery */
-.v3 [data-mask] { clip-path: inset(0 0 100% 0); transition: clip-path 1.1s var(--ease); transition-delay: var(--reveal-delay, 0ms); }
-.v3 [data-mask].is-in, .v3 .is-in [data-mask] { clip-path: inset(0 0 0% 0); }
+/* Mask/wipe reveal for imagery.
+   Implemented as a sliding curtain rather than clip-path: clipping the element
+   to zero area also zeroes its IntersectionObserver rect, so a clip-path mask
+   hides itself from the very trigger meant to release it. The curtain leaves
+   the element's box intact, so the observer still fires. */
+.v3 [data-mask] { position: relative; }
+.v3 [data-mask]::after {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  z-index: 2;
+  pointer-events: none;
+  background: var(--curtain, #000);
+  transform: translate3d(0, 0, 0);
+  transition: transform 1.1s var(--ease);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.v3 [data-mask].is-in::after, .v3 .is-in [data-mask]::after { transform: translate3d(0, 101%, 0); }
 
 /* Line draw for diagrams */
 .v3 [data-draw] { stroke-dasharray: var(--len, 1000); stroke-dashoffset: var(--len, 1000); transition: stroke-dashoffset 1.4s var(--ease-io); transition-delay: var(--reveal-delay, 0ms); }
@@ -294,6 +313,7 @@
 .v3 .drift { transition: transform 1.6s var(--ease); }
 
 @media (prefers-reduced-motion: reduce) {
+  .v3 [data-mask]::after { display: none; }
   .v3 [data-reveal], .v3 [data-mask], .v3 [data-draw], .v3 .line-mask > span, .v3 .drift, .v3 [data-stagger] > * {
     transition: none !important;
     opacity: 1 !important;

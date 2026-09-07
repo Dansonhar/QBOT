@@ -56,7 +56,7 @@ export default function Header() {
     <header
       ref={navRef}
       className={`v3 fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        solid ? 'bg-[var(--paper)]/95 backdrop-blur-md border-b border-[var(--rule)]' : 'bg-transparent'
+        solid ? 'bg-[var(--paper-95)] backdrop-blur-md border-b border-[var(--rule)]' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-[72px] max-w-[1500px] items-center gap-8 px-6 md:px-10 lg:px-16">

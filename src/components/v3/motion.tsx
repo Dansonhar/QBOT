@@ -48,13 +48,15 @@ type RevealProps = {
   delay?: number;
   y?: number;
   mask?: boolean;
+  /** Curtain colour for a mask reveal — must match the section behind it. */
+  curtain?: 'dark' | 'paper';
   className?: string;
   style?: CSSProperties;
 };
 
 /** Fade/slide (or clip-mask) an element in as it enters the viewport. */
 export function Reveal({
-  children, as: Tag = 'div', delay = 0, y, mask = false, className = '', style,
+  children, as: Tag = 'div', delay = 0, y, mask = false, curtain = 'dark', className = '', style,
 }: RevealProps) {
   const ref = useReveal<HTMLDivElement>();
   const attr = mask ? { 'data-mask': '' } : { 'data-reveal': '' };
@@ -66,6 +68,7 @@ export function Reveal({
       style={{
         ...(delay ? { ['--reveal-delay' as string]: `${delay}ms` } : null),
         ...(y !== undefined ? { ['--reveal-y' as string]: `${y}px` } : null),
+        ...(mask && curtain === 'paper' ? { ['--curtain' as string]: 'var(--paper)' } : null),
         ...style,
       }}
     >
