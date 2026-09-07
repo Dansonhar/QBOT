@@ -50,7 +50,7 @@ function Hero() {
           alt="QBOT V3 MIX shown in counter, kiosk and handheld modes"
           fetchPriority="high"
           decoding="async"
-          className="h-full w-full object-cover object-center opacity-[0.55] grayscale scale-105"
+          className="h-full w-full object-cover object-center opacity-[0.72] scale-105"
         />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/45 to-black" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-transparent to-black/60" />
@@ -291,7 +291,7 @@ function Surfaces() {
             {CHANNELS.map((c, k) => (
               <Link key={c.n} to={c.href} className="block">
                 <Reveal mask className="aspect-[4/3] overflow-hidden bg-white/5">
-                  <img src={c.img} alt={c.n} loading="lazy" decoding="async" className="h-full w-full object-cover grayscale" />
+                  <img src={c.img} alt={c.n} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                 </Reveal>
                 <Reveal delay={90} className="mt-5">
                   <div className="t-label text-white/40">{String(k + 1).padStart(2, '0')} · {c.n}</div>
@@ -350,7 +350,7 @@ function Surfaces() {
                   alt={c.n}
                   loading={k === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  className="absolute inset-0 h-full w-full object-cover grayscale transition-all duration-[900ms]"
+                  className="absolute inset-0 h-full w-full object-cover transition-all duration-[900ms]"
                   style={{
                     opacity: k === i ? 1 : 0,
                     transform: `scale(${k === i ? 1 : 1.06})`,
@@ -396,7 +396,7 @@ function Device() {
   return (
     <section className="relative overflow-hidden bg-black text-white">
       <div className="absolute inset-0">
-        <img src="/qpos-keyvisuals/v3mix/p1-bg.webp" alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover opacity-25 grayscale" />
+        <img src="/qpos-keyvisuals/v3mix/p1-bg.webp" alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black" />
       </div>
 
@@ -527,7 +527,7 @@ function Industries() {
                 alt={label}
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover grayscale transition-all duration-700"
+                className="absolute inset-0 h-full w-full object-cover transition-all duration-700"
                 style={{ opacity: k === active ? 1 : 0, transform: `scale(${k === active ? 1 : 1.05})` }}
               />
             ))}
@@ -600,7 +600,7 @@ function Ecosystem() {
                 <span className="t-small hidden flex-1 text-[var(--g-50)] md:block">{e.d}</span>
                 {/* hover-revealed thumbnail — the reward for exploring */}
                 <span className="pointer-events-none absolute right-16 top-1/2 hidden h-24 w-40 -translate-y-1/2 overflow-hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100 lg:block">
-                  <img src={e.img} alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover grayscale" />
+                  <img src={e.img} alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover" />
                 </span>
                 <span className="t-num ml-auto shrink-0 text-[var(--g-20)] transition-all duration-500 group-hover:translate-x-1 group-hover:text-black">→</span>
               </Link>
@@ -644,7 +644,7 @@ function Hardware() {
                   alt={h.n}
                   loading="lazy"
                   decoding="async"
-                  className="h-full w-full object-cover grayscale transition-all duration-[900ms] group-hover:scale-[1.04] group-hover:grayscale-0"
+                  className="h-full w-full object-cover transition-transform duration-[900ms] group-hover:scale-[1.04]"
                 />
               </Reveal>
               <Reveal delay={k * 110 + 90} className="mt-5 flex items-start justify-between gap-4 border-t border-white/12 pt-4">
@@ -688,7 +688,7 @@ function Showroom() {
             height={768}
             loading="lazy"
             decoding="async"
-            className="h-[45vh] w-full object-cover grayscale transition-all duration-[1200ms] group-hover:scale-[1.03] group-hover:grayscale-0 md:h-[70vh]"
+            className="h-[45vh] w-full object-cover transition-transform duration-[1200ms] group-hover:scale-[1.03] md:h-[70vh]"
           />
         </a>
       </Reveal>
