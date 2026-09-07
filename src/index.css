@@ -233,6 +233,9 @@
 
 /* ---- Type scale: fluid, high contrast ---- */
 .v3 .t-display { font-size: clamp(2.75rem, 9.5vw, 9rem); line-height: 0.88; letter-spacing: -0.045em; font-weight: 700; }
+/* Hero variant: the headline shares the frame with the background video, so it
+   is held to roughly half the width and stops growing well before t-display does. */
+.v3 .t-display--hero { font-size: clamp(2.5rem, 6.2vw, 5.75rem); line-height: 0.92; }
 .v3 .t-h1      { font-size: clamp(2.25rem, 6.2vw, 5.25rem); line-height: 0.94; letter-spacing: -0.038em; font-weight: 700; }
 .v3 .t-h2      { font-size: clamp(1.75rem, 4.2vw, 3.25rem); line-height: 1.02; letter-spacing: -0.03em; font-weight: 700; }
 .v3 .t-h3      { font-size: clamp(1.25rem, 2.1vw, 1.75rem); line-height: 1.15; letter-spacing: -0.02em; font-weight: 600; }

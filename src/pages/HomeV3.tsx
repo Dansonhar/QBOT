@@ -1,4 +1,5 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
@@ -63,7 +64,7 @@ function HeroMedia() {
         src="/video/qios-poster.jpg"
         alt="QBot self-service kiosk and POS hardware in use"
         decoding="async"
-        className="h-full w-full scale-105 object-cover object-center opacity-[0.72]"
+        className="h-full w-full scale-105 object-cover object-center opacity-[0.6] md:opacity-[0.85] md:object-[72%_center]"
       />
     );
   }
@@ -78,7 +79,7 @@ function HeroMedia() {
       preload="auto"
       poster="/video/qios-poster.jpg"
       aria-hidden="true"
-      className="h-full w-full scale-105 object-cover object-center opacity-[0.72]"
+      className="h-full w-full scale-105 object-cover object-center opacity-[0.85] md:object-[72%_center]"
     >
       {/* VP9 first: smaller, and covers Chromium builds shipped without H.264 */}
       <source src="/video/qios.webm" type="video/webm" />
@@ -100,46 +101,55 @@ function Hero() {
       {/* Full-bleed key visual — video where it's worth the bytes, poster otherwise */}
       <div className="absolute inset-0">
         <HeroMedia />
-        <div className="absolute inset-0 bg-gradient-to-b from-black via-black/45 to-black" />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-transparent to-black/60" />
+        {/* Legibility scrim. On mobile the copy is full width, so it has to be a
+            vertical wash; from md up it becomes a left-hand column and the right
+            of the frame — where the kiosk actually is — stays clear. */}
+        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black md:hidden" />
+        <div className="absolute inset-0 hidden md:block bg-[linear-gradient(96deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.88)_30%,rgba(0,0,0,0.45)_56%,rgba(0,0,0,0.08)_78%,rgba(0,0,0,0.22)_100%)]" />
+        {/* Feather into the nav above and the fact rail below */}
+        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/85 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black via-black/55 to-transparent" />
       </div>
 
       <div className="relative z-10 flex-1 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-10 pt-32">
         <div className="mx-auto w-full max-w-[1500px]">
-          <Reveal className="t-label text-white/50 mb-8" delay={100}>
-            Designed in Tokyo · Built for Malaysia
-          </Reveal>
-
-          <MaskLines
-            className="t-display max-w-[16ch]"
-            lines={['One system', 'behind', 'every sale.']}
-            delay={220}
-            step={110}
-          />
-
-          <div className="mt-10 grid gap-10 lg:grid-cols-[minmax(0,1fr)_auto] lg:items-end">
-            <Reveal delay={700} className="t-lead max-w-xl text-white/65">
-              Counter, kiosk, handheld, tablet, QR and web — six ways to sell,
-              one platform underneath. Activate only what your business needs.
+          {/* Held to the left half from md up so the type never lands on the subject */}
+          <div className="max-w-[34rem] md:max-w-[46%] lg:max-w-[44%]">
+            <Reveal className="t-label text-white/50 mb-8" delay={100}>
+              Designed in Tokyo · Built for Malaysia
             </Reveal>
 
-            <Reveal delay={820} className="flex flex-wrap items-center gap-3">
-              <a
-                href={WA_DEMO}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={() => trackWhatsAppClick('HomeV3 > Hero > Book a demo')}
-                className="t-label bg-white px-7 py-4 text-black transition-colors hover:bg-white/85"
-              >
-                Book a demo
-              </a>
-              <Link
-                to="/products"
-                className="t-label border border-white/25 px-7 py-4 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
-              >
-                See the platform
-              </Link>
-            </Reveal>
+            <MaskLines
+              className="t-display t-display--hero"
+              lines={['One system', 'behind', 'every sale.']}
+              delay={220}
+              step={110}
+            />
+
+            <div className="mt-9 flex flex-col gap-8">
+              <Reveal delay={700} className="t-lead text-white/65">
+                Counter, kiosk, handheld, tablet, QR and web — six ways to sell,
+                one platform underneath. Activate only what your business needs.
+              </Reveal>
+
+              <Reveal delay={820} className="flex flex-wrap items-center gap-3">
+                <a
+                  href={WA_DEMO}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={() => trackWhatsAppClick('HomeV3 > Hero > Book a demo')}
+                  className="t-label bg-white px-7 py-4 text-black transition-colors hover:bg-white/85"
+                >
+                  Book a demo
+                </a>
+                <Link
+                  to="/products"
+                  className="t-label border border-white/25 px-7 py-4 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+                >
+                  See the platform
+                </Link>
+              </Reveal>
+            </div>
           </div>
         </div>
       </div>
@@ -545,16 +555,112 @@ function Device() {
 }
 
 /* ═══════════════ 07 · MODULES ═══════════════ */
-const GROUPS = [
-  { k: 'Sell',    items: [['POS', '/products/pos'], ['mPOS', '/products/mpos'], ['Kiosk', '/products/kiosk'], ['Webstore', '/products/webstore'], ['Tablet', '/products/tablet'], ['QR Order', '/products/qr-order']] },
-  { k: 'Manage',  items: [['QHub', '/products/qhub'], ['Inventory', '/products/inventory'], ['Loyalty', '/products/loyalty']] },
-  { k: 'Operate', items: [['Kitchen Display', '/products/kitchen-display'], ['Queue (QMS)', '/products/qms'], ['Live Display', '/products/live-display']] },
-  { k: 'Grow',    items: [['Sales Boosters', '/products/sales-boosters'], ['AI Insights', '/products/ai-insights']] },
+/* Copy below is the company's own, lifted from each product page rather than
+   written fresh, so the preview never claims anything the site doesn't. */
+type Mod = { n: string; href: string; img: string; d: string };
+
+const GROUPS: { k: string; items: Mod[] }[] = [
+  { k: 'Sell', items: [
+    { n: 'POS',          href: '/products/pos',       img: '/qpos-keyvisuals/hero-qpos.webp',       d: 'Full register system. Fast checkout, smart order flow, and every sale tracked from open to close.' },
+    { n: 'mPOS',         href: '/products/mpos',      img: '/qpos-keyvisuals/hero-mpos.webp',       d: 'Same system, handheld. Take orders anywhere in the store — floor, queue, outdoor seating.' },
+    { n: 'Kiosk',        href: '/products/kiosk',     img: '/qpos-keyvisuals/hero-kiosk.webp',      d: 'Customers order and pay themselves. No queue, no miscommunication, no staff at the counter.' },
+    { n: 'Webstore',     href: '/products/webstore',  img: '/qpos-keyvisuals/hero-web.webp',        d: 'Your own branded online store. Customers order directly from you — no marketplace commission.' },
+    { n: 'Tablet',       href: '/products/tablet',    img: '/qpos-keyvisuals/hero-tableside.webp',  d: 'Tablets at the table. Customers browse, customise their order, and send it straight to the kitchen.' },
+    { n: 'QR Order',     href: '/products/qr-order',  img: '/qpos-keyvisuals/hero-qrorder.webp',    d: 'Customers scan, buy and pay on their own phone — no walkouts, no cash handling, no missed sales.' },
+  ]},
+  { k: 'Manage', items: [
+    { n: 'QHub',         href: '/products/qhub',      img: '/qpos-keyvisuals/hero-aidashboard.webp', d: 'One dashboard to run the entire business — menus, staff, outlets, settings. No switching between apps.' },
+    { n: 'Inventory',    href: '/products/inventory', img: '/qpos-keyvisuals/hero-ims.webp',        d: "Always know what you have, what you're running low on, and what's moving between outlets." },
+    { n: 'Loyalty',      href: '/products/loyalty',   img: '/qpos-keyvisuals/hero-loyaltyapp.webp', d: 'Your own loyalty program — stamps, rewards, wallet — built into the POS. No third-party app.' },
+  ]},
+  { k: 'Operate', items: [
+    { n: 'Kitchen Display', href: '/products/kitchen-display', img: '/qpos-keyvisuals/hero-kds.webp',        d: 'Every order from every channel on one screen, in real time. No paper tickets, no missed orders.' },
+    { n: 'Queue (QMS)',     href: '/products/qms',             img: '/qpos-keyvisuals/hero-qms.webp',        d: 'Customers join the queue, get a number, and wait comfortably. The system calls them when it\'s ready.' },
+    { n: 'Live Display',    href: '/products/live-display',    img: '/qpos-keyvisuals/hero-livedisplay.webp', d: 'A screen customers actually watch — order status, queue updates, and your latest promotions.' },
+  ]},
+  { k: 'Grow', items: [
+    { n: 'Sales Boosters', href: '/products/sales-boosters', img: '/qpos-keyvisuals/hero-salesbooster.webp', d: 'Smart upsells, spend thresholds and product badges, running automatically on every channel.' },
+    { n: 'AI Insights',    href: '/products/ai-insights',    img: '/qpos-keyvisuals/hero-aidashboard.webp',  d: 'Your sales data turned into plain-English recommendations. Stop guessing what is working.' },
+  ]},
 ];
 
+/** True only for devices that can genuinely hover (excludes touch + stylus). */
+function useHoverCapable() {
+  const [can, setCan] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia('(hover: hover) and (pointer: fine)');
+    const on = () => setCan(mq.matches);
+    on();
+    mq.addEventListener('change', on);
+    return () => mq.removeEventListener('change', on);
+  }, []);
+  return can;
+}
+
+/** Floating device preview that tracks the cursor, clamped inside the viewport. */
+function ModulePreview({ mod, pos }: { mod: Mod | null; pos: { x: number; y: number } }) {
+  const W = 340, H = 300, PAD = 16;
+  const x = Math.min(Math.max(pos.x + 28, PAD), window.innerWidth - W - PAD);
+  const y = Math.min(Math.max(pos.y - H / 2, PAD), window.innerHeight - H - PAD);
+  /* Portalled to <body>: any ancestor with a transform/will-change turns
+     position:fixed into position:absolute, which parks the card mid-document. */
+  return createPortal(
+    <div
+      aria-hidden="true"
+      className="pointer-events-none fixed left-0 top-0 z-[60] hidden lg:block"
+      style={{
+        width: W,
+        transform: `translate3d(${x}px, ${y}px, 0)`,
+        opacity: mod ? 1 : 0,
+        transition: 'transform 380ms cubic-bezier(0.22,1,0.36,1), opacity 260ms ease',
+      }}
+    >
+      <div className="bg-black text-white shadow-2xl">
+        <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
+          {/* every image stays mounted so switching modules never flashes a gap */}
+          {GROUPS.flatMap(g => g.items).map(m => (
+            <img
+              key={m.n}
+              src={m.img}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              className="absolute inset-0 h-full w-full object-cover transition-opacity duration-300"
+              style={{ opacity: mod?.n === m.n ? 1 : 0 }}
+            />
+          ))}
+        </div>
+        <div className="p-5">
+          <div className="t-label text-white/45">{mod?.n}</div>
+          <p className="t-small mt-2 text-white/70">{mod?.d}</p>
+        </div>
+      </div>
+    </div>,
+    document.body,
+  );
+}
+
 function Modules() {
+  const hoverCapable = useHoverCapable();
+  const [active, setActive] = useState<Mod | null>(null);
+  const [openKey, setOpenKey] = useState<string | null>(null);   // touch: expanded row
+  const [pos, setPos] = useState({ x: 0, y: 0 });
+
+  // rAF-throttled so pointer tracking never competes with scrolling
+  const raf = useRef(0);
+  const onMove = (e: React.MouseEvent) => {
+    if (!hoverCapable || raf.current) return;
+    const { clientX, clientY } = e;
+    raf.current = requestAnimationFrame(() => { raf.current = 0; setPos({ x: clientX, y: clientY }); });
+  };
+  useEffect(() => () => { if (raf.current) cancelAnimationFrame(raf.current); }, []);
+
   return (
-    <section className="bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16">
+    <section
+      className="relative bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16"
+      onMouseMove={onMove}
+      onMouseLeave={() => setActive(null)}
+    >
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
@@ -567,7 +673,11 @@ function Modules() {
           </Reveal>
         </div>
 
-        <div className="mt-16 grid gap-px bg-[var(--rule)] md:grid-cols-2 lg:grid-cols-4">
+        <p className="t-label mt-12 text-[var(--g-40)]">
+          {hoverCapable ? 'Hover a module to see it' : 'Tap a module to see it'}
+        </p>
+
+        <div className="mt-4 grid gap-px bg-[var(--rule)] md:grid-cols-2 lg:grid-cols-4">
           {GROUPS.map((g, gi) => (
             <Reveal key={g.k} delay={gi * 90} className="bg-[var(--paper)] p-7 lg:p-8">
               <div className="flex items-baseline justify-between">
@@ -575,21 +685,55 @@ function Modules() {
                 <span className="t-num text-xs text-[var(--g-40)]">{String(g.items.length).padStart(2, '0')}</span>
               </div>
               <div className="mt-6">
-                {g.items.map(([name, href]) => (
-                  <Link
-                    key={name}
-                    to={href}
-                    className="group flex items-center justify-between border-t border-[var(--rule)] py-3.5 last:border-b"
-                  >
-                    <span className="t-small font-medium text-[var(--g-50)] transition-colors group-hover:text-black">{name}</span>
-                    <span className="t-num text-[var(--g-20)] transition-all group-hover:translate-x-0.5 group-hover:text-black">→</span>
-                  </Link>
-                ))}
+                {g.items.map(m => {
+                  const open = openKey === m.n;
+                  return (
+                    <div key={m.n} className="border-t border-[var(--rule)] last:border-b">
+                      <Link
+                        to={m.href}
+                        onMouseEnter={() => hoverCapable && setActive(m)}
+                        onFocus={() => hoverCapable && setActive(m)}
+                        onBlur={() => setActive(null)}
+                        onClick={e => {
+                          // touch: first tap reveals the device, second follows the link
+                          if (!hoverCapable && !open) { e.preventDefault(); setOpenKey(m.n); }
+                        }}
+                        aria-expanded={!hoverCapable ? open : undefined}
+                        className="group flex items-center justify-between py-3.5"
+                      >
+                        <span className={`t-small font-medium transition-colors ${active?.n === m.n ? 'text-black' : 'text-[var(--g-50)]'} group-hover:text-black`}>
+                          {m.n}
+                        </span>
+                        <span className="t-num text-[var(--g-20)] transition-all group-hover:translate-x-0.5 group-hover:text-black">→</span>
+                      </Link>
+
+                      {/* touch-only inline reveal */}
+                      {!hoverCapable && (
+                        <div
+                          className="overflow-hidden transition-all duration-500"
+                          style={{ maxHeight: open ? 420 : 0, opacity: open ? 1 : 0 }}
+                        >
+                          <div className="pb-5">
+                            <div className="aspect-[16/10] overflow-hidden bg-black">
+                              {open && <img src={m.img} alt={m.n} loading="lazy" decoding="async" className="h-full w-full object-cover" />}
+                            </div>
+                            <p className="t-small mt-3 text-[var(--g-50)]">{m.d}</p>
+                            <Link to={m.href} className="t-label mt-3 inline-flex items-center gap-2 text-black underline underline-offset-4">
+                              Open {m.n} <span className="t-num">→</span>
+                            </Link>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </Reveal>
           ))}
         </div>
       </div>
+
+      {hoverCapable && <ModulePreview mod={active} pos={pos} />}
     </section>
   );
 }
