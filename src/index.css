@@ -226,6 +226,10 @@
   --g-10: #E6E6E2;
   --rule: rgba(0,0,0,0.12);
   --rule-inv: rgba(255,255,255,0.16);
+  /* The one accent in a monochrome system: the cut that strikes out the
+     five disconnected tools in section 02. Used nowhere else, so it keeps
+     its meaning. */
+  --cut: #FF3B30;
   --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-io: cubic-bezier(0.65, 0, 0.35, 1);
@@ -252,6 +256,70 @@
   text-transform: uppercase;
 }
 .v3 .t-num { font-family: var(--mono); font-variant-numeric: tabular-nums; letter-spacing: -0.02em; }
+
+/* ═══════════════ DARK SURFACES ═══════════════
+   The v3 homepage runs on near-black rather than paper. Rather than
+   restyling every section, `.on-dark` re-points the *same* tokens at their
+   inverted values, so `bg-[var(--paper)]`, `text-[var(--g-50)]` and
+   `.hairline` all keep meaning their role and simply flip context. Nesting
+   works too: a light island inside a dark page just omits the class.
+   ─────────────────────────────────────────────────────────────── */
+.v3.on-dark, .v3 .on-dark {
+  --paper: #0C0C0C;        /* section ground */
+  --paper-pure: #111111;   /* raised ground */
+  --paper-95: rgba(9, 9, 9, 0.92);
+  --g-90: #FFFFFF;
+  --g-70: rgba(255, 255, 255, 0.86);
+  --g-50: rgba(255, 255, 255, 0.60);
+  --g-40: rgba(255, 255, 255, 0.44);  /* lightest text on black that passes AA */
+  --g-20: rgba(255, 255, 255, 0.20);
+  --g-10: rgba(255, 255, 255, 0.10);
+  --rule: rgba(255, 255, 255, 0.10);
+  --rule-inv: rgba(0, 0, 0, 0.14);
+  color: #FFFFFF;
+}
+/* Page grounds, darkest to lightest. Steps are deliberately tiny — on a
+   monochrome page depth has to come from ~4% jumps, not contrast. */
+.v3.s-0, .v3 .s-0 { background-color: #070707; }
+.v3.s-1, .v3 .s-1 { background-color: #0C0C0C; }
+.v3.s-2, .v3 .s-2 { background-color: #111111; }
+
+/* ---- Card: the one surface treatment, borrowed from the platform pages ----
+   A hairline that lifts on hover, over a barely-there wash. Never a fill —
+   filled boxes read as web app, hairlines read as product. */
+.v3.card, .v3 .card {
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.09);
+  background-color: rgba(255, 255, 255, 0.022);
+  transition: border-color 0.5s var(--ease), background-color 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.v3.card:hover, .v3 .card:hover {
+  border-color: rgba(255, 255, 255, 0.24);
+  background-color: rgba(255, 255, 255, 0.05);
+}
+/* Light-context fallback so a card never vanishes if it lands off `.on-dark`. */
+.v3 .card:not(.on-dark *):not(.on-dark) { border-color: var(--rule); background-color: rgba(0, 0, 0, 0.02); }
+
+/* ---- Atmosphere ----
+   Grain and a top glow. Both are pure luminance, so the page stays strictly
+   black and white while gaining the depth flat #000 can never have. */
+.v3.grain::before, .v3 .grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  opacity: 0.035;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.v3.glow-top::after, .v3 .glow-top::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background: radial-gradient(120% 60% at 50% 0%, rgba(255,255,255,0.055) 0%, transparent 62%);
+}
 
 /* ---- Rules ---- */
 .v3 .hairline { border-top: 1px solid var(--rule); }

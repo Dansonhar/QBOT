@@ -28,7 +28,7 @@ export default function WhatsAppButton({ position = 'bottom-right', className = 
         target="_blank"
         rel="noopener noreferrer"
         onClick={handleClick}
-        className="group relative inline-flex bg-gradient-to-r from-green-500 to-green-600 text-white rounded-full p-4 shadow-2xl hover:shadow-green-500/50 transition-all duration-300 hover:scale-110 active:scale-95"
+        className="group relative inline-flex rounded-full border border-white/15 bg-black p-4 text-white shadow-2xl transition-all duration-300 hover:scale-110 hover:bg-white hover:text-black active:scale-95"
         aria-label="Chat with QBot Team on WhatsApp"
       >
         <MessageCircle size={28} strokeWidth={2.5} className="group-hover:animate-bounce" />

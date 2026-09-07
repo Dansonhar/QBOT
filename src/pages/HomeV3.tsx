@@ -3,8 +3,10 @@ import { createPortal } from 'react-dom';
 import { Link } from 'react-router-dom';
 import SEOHead from '../components/SEOHead';
 import StructuredData from '../components/StructuredData';
-import { Reveal, MaskLines, Counter, useScrollProgress, useReveal } from '../components/v3/motion';
+import { Reveal, MaskLines, Counter, useScrollProgress, useScrollPass, useReveal } from '../components/v3/motion';
 import { trackWhatsAppClick } from '../utils/trackWhatsApp';
+
+const clamp01 = (n: number) => Math.min(Math.max(n, 0), 1);
 
 const WA = 'https://wa.me/60126909189';
 const WA_DEMO = `${WA}?text=Hi%20QBot%2C%20I%27d%20like%20to%20book%20a%20demo`;
@@ -24,11 +26,11 @@ function useIsDesktop() {
 }
 
 /** Section number + name. The mono register that runs through the whole page. */
-function SectionTag({ n, children, invert = false }: { n: string; children: string; invert?: boolean }) {
+function SectionTag({ n, children }: { n: string; children: string; invert?: boolean }) {
   return (
-    <Reveal className={`t-label flex items-center gap-3 ${invert ? 'text-white/45' : 'text-[var(--g-40)]'}`}>
+    <Reveal className="t-label flex items-center gap-3 text-[var(--g-40)]">
       <span>{n}</span>
-      <span className={`h-px w-8 ${invert ? 'bg-white/25' : 'bg-black/20'}`} />
+      <span className="h-px w-8 bg-[var(--g-20)]" />
       <span>{children}</span>
     </Reveal>
   );
@@ -82,7 +84,7 @@ function HeroMedia() {
         src="/video/qios-poster.jpg"
         alt="QBot self-service kiosk and POS hardware in use"
         decoding="async"
-        className="h-full w-full object-cover object-center"
+        className="h-full w-full object-cover object-center brightness-[0.78] contrast-[1.08] saturate-[0.92]"
       />
     );
   }
@@ -97,7 +99,7 @@ function HeroMedia() {
       preload="auto"
       poster="/video/qios-poster.jpg"
       aria-hidden="true"
-      className="h-full w-full object-cover object-center"
+      className="h-full w-full object-cover object-center brightness-[0.78] contrast-[1.08] saturate-[0.92]"
     >
       {/* VP9 first: smaller, and covers Chromium builds shipped without H.264 */}
       <source src="/video/qios.webm" type="video/webm" />
@@ -115,28 +117,35 @@ function Hero() {
     { v: 5, s: '', l: 'Platform products' },
   ];
   return (
-    <section className="relative min-h-[100svh] bg-black text-white flex flex-col overflow-hidden">
-      {/* Full-bleed key visual — video where it's worth the bytes, poster otherwise */}
+    <section className="on-dark relative flex min-h-[100svh] flex-col overflow-hidden bg-black text-white">
+      {/* The film is the frame, not a letterbox strip across the top. It is a
+          16:9 master, so giving it a near-16:9 stage means object-cover barely
+          crops it; the old 44svh band threw away half the picture. */}
       <div className="absolute inset-0">
         <HeroMedia />
-        {/* Legibility scrim. On mobile the copy is full width, so it has to be a
-            vertical wash; from md up it becomes a left-hand column and the right
-            of the frame — where the kiosk actually is — stays clear. */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/85 via-black/70 to-black md:hidden" />
-        <div className="absolute inset-0 hidden md:block bg-[linear-gradient(96deg,rgba(0,0,0,0.95)_0%,rgba(0,0,0,0.88)_30%,rgba(0,0,0,0.45)_56%,rgba(0,0,0,0.08)_78%,rgba(0,0,0,0.22)_100%)]" />
-        {/* Feather into the nav above and the fact rail below */}
-        <div className="absolute inset-x-0 top-0 h-40 bg-gradient-to-b from-black/85 to-transparent" />
-        <div className="absolute inset-x-0 bottom-0 h-48 bg-gradient-to-t from-black via-black/55 to-transparent" />
+        {/* Scrims, in order: a top wash so the nav always has something to sit
+            on, a left column so the headline never fights the image, and a
+            foot that dissolves the film into the page. */}
+        <div className="absolute inset-0 bg-black/45" />
+        <div className="absolute inset-x-0 top-0 h-48 bg-gradient-to-b from-black/90 via-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/55 to-black/25" />
+        <div className="absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-black via-black/75 to-transparent" />
       </div>
 
-      <div className="relative z-10 flex-1 flex flex-col justify-end px-6 md:px-10 lg:px-16 pb-10 pt-32">
-        <div className="mx-auto w-full max-w-[1500px]">
-          {/* Held to the left half from md up so the type never lands on the subject */}
-          <div className="max-w-[34rem] md:max-w-[46%] lg:max-w-[44%]">
-            <Reveal className="t-label text-white/50 mb-8" delay={100}>
-              Designed in Tokyo · Built for Malaysia
-            </Reveal>
+      {/* Grain sits above the film and below the type: it unifies compressed
+          video with flat vector UI, which is most of the "shot on a set"
+          feeling that a raw MP4 on black never has. */}
+      <div className="grain pointer-events-none absolute inset-0 z-[1]" />
 
+      <div className="relative z-10 flex flex-1 items-end px-6 pb-10 pt-32 md:px-10 md:pb-14 lg:px-16">
+        <div className="mx-auto w-full max-w-[1500px]">
+          <Reveal className="t-label mb-7 flex items-center gap-3 text-white/55" delay={100}>
+            <span className="inline-block h-1 w-1 shrink-0 bg-white" />
+            Designed in Tokyo · Built for Malaysia
+          </Reveal>
+
+          {/* Headline left, the read and the actions in a column beside it */}
+          <div className="grid gap-9 lg:grid-cols-[minmax(0,1.15fr)_minmax(0,0.85fr)] lg:items-end lg:gap-20">
             <MaskLines
               className="t-display t-display--hero"
               lines={['One system', 'behind', 'every sale.']}
@@ -144,8 +153,8 @@ function Hero() {
               step={110}
             />
 
-            <div className="mt-9 flex flex-col gap-8">
-              <Reveal delay={700} className="t-lead text-white/65">
+            <div className="flex flex-col gap-7 lg:pb-3">
+              <Reveal delay={700} className="t-lead max-w-xl text-white/70">
                 Counter, kiosk, handheld, tablet, QR and web — six ways to sell,
                 one platform underneath. Activate only what your business needs.
               </Reveal>
@@ -156,13 +165,13 @@ function Hero() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => trackWhatsAppClick('HomeV3 > Hero > Book a demo')}
-                  className="t-label bg-white px-7 py-4 text-black transition-colors hover:bg-white/85"
+                  className="t-label rounded-full bg-white px-8 py-4 text-black transition-colors hover:bg-white/85"
                 >
                   Book a demo
                 </a>
                 <Link
                   to="/products"
-                  className="t-label border border-white/25 px-7 py-4 text-white transition-colors hover:border-white hover:bg-white hover:text-black"
+                  className="t-label rounded-full border border-white/25 bg-white/[0.04] px-8 py-4 text-white backdrop-blur-sm transition-colors hover:border-white hover:bg-white hover:text-black"
                 >
                   See the platform
                 </Link>
@@ -173,17 +182,17 @@ function Hero() {
       </div>
 
       {/* Fact rail — verifiable numbers only */}
-      <div className="relative z-10 hairline-inv">
+      <div className="relative z-10 border-t border-white/12 bg-black/35 backdrop-blur-md">
         <div className="mx-auto grid max-w-[1500px] grid-cols-2 lg:grid-cols-4">
           {facts.map((f, i) => (
             <div
               key={f.l}
-              className={`px-6 py-7 md:px-10 lg:px-16 ${i > 0 ? 'lg:border-l' : ''} ${i % 2 ? 'border-l' : ''} border-white/12 ${i < 2 ? 'border-b lg:border-b-0' : ''}`}
+              className={`px-6 py-6 md:px-10 lg:px-16 ${i > 0 ? 'lg:border-l' : ''} ${i % 2 ? 'border-l' : ''} border-white/12 ${i < 2 ? 'border-b lg:border-b-0' : ''}`}
             >
               <div className="t-num text-3xl font-semibold md:text-4xl">
                 <Counter to={f.v} suffix={f.s} />
               </div>
-              <div className="t-label mt-1.5 text-white/40">{f.l}</div>
+              <div className="t-label mt-1.5 text-white/45">{f.l}</div>
             </div>
           ))}
         </div>
@@ -195,7 +204,7 @@ function Hero() {
 /* ═══════════════ 02 · POSITION ═══════════════ */
 function Position() {
   return (
-    <section className="bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16">
+    <section className="s-1 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <SectionTag n="01">What we build</SectionTag>
         <div className="mt-10 grid gap-12 lg:grid-cols-[1.35fr_1fr] lg:gap-20">
@@ -232,8 +241,15 @@ function Position() {
 /* ═══════════════ 03 · PROBLEM ═══════════════ */
 function Problem() {
   const stack = ['Counter POS', 'Kiosk vendor', 'Online store', 'Loyalty app', 'Stock spreadsheet'];
+  /* Scroll-linked, not timed: each tool is struck through in turn as the list
+     passes the viewport, and only once all five are cut does the red collapse
+     into the single platform below them. */
+  const [listRef, p] = useScrollPass<HTMLDivElement>(0.62, 0.3);
+  const SLICE = 0.13;                                   // scroll each strike occupies
+  const cut = (i: number) => clamp01((p - i * SLICE) / SLICE);
+  const unify = clamp01((p - stack.length * SLICE) / 0.3);
   return (
-    <section className="bg-black px-6 py-24 text-white md:px-10 md:py-36 lg:px-16">
+    <section className="s-0 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <SectionTag n="02" invert>The problem</SectionTag>
         <div className="mt-10 grid gap-14 lg:grid-cols-[1fr_1fr] lg:gap-20">
@@ -250,27 +266,47 @@ function Problem() {
             </Reveal>
           </div>
 
-          <Reveal delay={140} className="lg:pt-2">
-            <div data-stagger>
-            {stack.map((s, i) => (
-              <div
-                key={s}
-                className="hairline-inv flex items-center justify-between gap-6 py-5"
-                style={{ ['--reveal-delay' as string]: `${i * 70}ms` }}
-              >
-                <div className="flex items-center gap-5">
-                  <span className="t-num text-xs text-white/30">{String(i + 1).padStart(2, '0')}</span>
-                  <span className="t-h3 text-white/85 line-through decoration-white/25 decoration-1">{s}</span>
+          <div ref={listRef} className="relative lg:pt-2">
+            {/* Once every tool is struck out the red gathers into a single line
+                down the gutter, running the length of the stack into the box. */}
+            <span
+              aria-hidden="true"
+              className="absolute -left-3 top-0 w-px origin-top bg-[var(--cut)] md:-left-5"
+              style={{ height: '100%', transform: `scaleY(${unify})`, opacity: unify }}
+            />
+
+            {stack.map((s, i) => {
+              const c = cut(i);
+              return (
+                <div key={s} className="hairline-inv flex items-center justify-between gap-6 py-5">
+                  <div className="flex items-center gap-5">
+                    <span className="t-num text-xs text-white/30">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="t-h3 relative" style={{ color: `rgba(255,255,255,${0.85 - 0.42 * c})` }}>
+                      {s}
+                      {/* the cut itself — drawn left to right on scroll */}
+                      <span
+                        aria-hidden="true"
+                        className="absolute left-0 top-1/2 h-[2px] w-full origin-left bg-[var(--cut)]"
+                        style={{ transform: `scaleX(${c})` }}
+                      />
+                    </span>
+                  </div>
+                  <span className="t-label text-white/30" style={{ opacity: 1 - c }}>Separate</span>
                 </div>
-                <span className="t-label text-white/30">Separate</span>
-              </div>
-            ))}
-            </div>
-            <div className="mt-8 flex items-center gap-4 border border-white/20 px-6 py-5">
+              );
+            })}
+
+            <div
+              className="relative mt-8 flex items-center gap-4 border px-6 py-5 transition-colors duration-500"
+              style={{
+                borderColor: `rgba(255,255,255,${0.2 + 0.8 * unify})`,
+                backgroundColor: `rgba(255,255,255,${0.04 * unify})`,
+              }}
+            >
               <span className="t-num text-xs text-white/40">→</span>
               <span className="t-h3">One platform</span>
             </div>
-          </Reveal>
+          </div>
         </div>
       </div>
     </section>
@@ -282,7 +318,7 @@ function Systemap() {
   const ref = useReveal<HTMLDivElement>();
   const surfaces = ['POS', 'Kiosk', 'mPOS', 'Tablet', 'QR', 'Web'];
   return (
-    <section className="bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16">
+    <section className="s-1 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <SectionTag n="03">How it fits together</SectionTag>
         <MaskLines className="t-h1 mt-10 max-w-[18ch]" lines={['Every surface', 'writes to one core.']} step={95} />
@@ -359,7 +395,7 @@ function Surfaces() {
   /* Mobile / tablet: an honest stack. Sticky pinning on a small screen fights the user. */
   if (!isDesktop) {
     return (
-      <section className="bg-black px-6 py-24 text-white md:px-10">
+      <section className="s-0 px-6 py-24 md:px-10">
         <div className="mx-auto max-w-[1500px]">
           <SectionTag n="04" invert>Six ways to sell</SectionTag>
           <MaskLines className="t-h1 mt-8" lines={['Wherever the', 'customer is.']} step={95} />
@@ -384,7 +420,7 @@ function Surfaces() {
 
   /* Desktop: pinned canvas, imagery cross-fades as the index advances. */
   return (
-    <section ref={ref} className="relative bg-black text-white" style={{ height: `${CHANNELS.length * 85}vh` }}>
+    <section ref={ref} className="relative s-0" style={{ height: `${CHANNELS.length * 85}vh` }}>
       <div className="sticky top-0 flex h-screen flex-col justify-center overflow-hidden px-10 lg:px-16">
         <div className="mx-auto grid w-full max-w-[1500px] grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)] items-center gap-20">
           {/* left — index */}
@@ -496,7 +532,7 @@ const DEVICE_SPECS = [
 
 function Device() {
   return (
-    <section className="relative overflow-hidden bg-black text-white">
+    <section className="relative overflow-hidden s-0">
       <div className="absolute inset-0">
         <img src="/qpos-keyvisuals/v3mix/p1-bg.webp" alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-black" />
@@ -558,7 +594,7 @@ function Device() {
               no extra licence. One device to buy, one system to train on, one bill to pay.
             </Reveal>
             <Reveal delay={220} className="flex flex-wrap items-center gap-4">
-              <Link to="/3-in-1" className="t-label inline-block border border-white/25 px-7 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
+              <Link to="/3-in-1" className="t-label inline-block rounded-full border border-white/25 px-8 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
                 Explore the V3 MIX
               </Link>
               <Link to="/hardware" className="t-label inline-block py-4 text-white/50 transition-colors hover:text-white">
@@ -633,7 +669,7 @@ function ModulePreview({ mod, pos }: { mod: Mod | null; pos: { x: number; y: num
         transition: 'transform 380ms cubic-bezier(0.22,1,0.36,1), opacity 260ms ease',
       }}
     >
-      <div className="bg-black text-white shadow-2xl">
+      <div className="border border-white/15 bg-[#0A0A0A] text-white shadow-[0_24px_80px_rgba(0,0,0,0.85)]">
         <div className="relative aspect-[16/10] overflow-hidden bg-white/5">
           {/* every image stays mounted so switching modules never flashes a gap */}
           {GROUPS.flatMap(g => g.items).map(m => (
@@ -675,7 +711,7 @@ function Modules() {
 
   return (
     <section
-      className="relative bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16"
+      className="relative s-1 px-6 py-24 md:px-10 md:py-36 lg:px-16"
       onMouseMove={onMove}
       onMouseLeave={() => setActive(null)}
     >
@@ -697,9 +733,9 @@ function Modules() {
 
         <div className="mt-4 grid gap-px bg-[var(--rule)] md:grid-cols-2 lg:grid-cols-4">
           {GROUPS.map((g, gi) => (
-            <Reveal key={g.k} delay={gi * 90} className="bg-[var(--paper)] p-7 lg:p-8">
+            <Reveal key={g.k} delay={gi * 90} className="card p-7 lg:p-8">
               <div className="flex items-baseline justify-between">
-                <span className="t-label text-black">{g.k}</span>
+                <span className="t-label text-[var(--g-90)]">{g.k}</span>
                 <span className="t-num text-xs text-[var(--g-40)]">{String(g.items.length).padStart(2, '0')}</span>
               </div>
               <div className="mt-6">
@@ -719,10 +755,10 @@ function Modules() {
                         aria-expanded={!hoverCapable ? open : undefined}
                         className="group flex items-center justify-between py-3.5"
                       >
-                        <span className={`t-small font-medium transition-colors ${active?.n === m.n ? 'text-black' : 'text-[var(--g-50)]'} group-hover:text-black`}>
+                        <span className={`t-small font-medium transition-colors ${active?.n === m.n ? 'text-[var(--g-90)]' : 'text-[var(--g-50)]'} group-hover:text-black`}>
                           {m.n}
                         </span>
-                        <span className="t-num text-[var(--g-20)] transition-all group-hover:translate-x-0.5 group-hover:text-black">→</span>
+                        <span className="t-num text-[var(--g-20)] transition-all group-hover:translate-x-0.5 group-hover:text-[var(--g-90)]">→</span>
                       </Link>
 
                       {/* touch-only inline reveal */}
@@ -736,7 +772,7 @@ function Modules() {
                               {open && <img src={m.img} alt={m.n} loading="lazy" decoding="async" className="h-full w-full object-cover" />}
                             </div>
                             <p className="t-small mt-3 text-[var(--g-50)]">{m.d}</p>
-                            <Link to={m.href} className="t-label mt-3 inline-flex items-center gap-2 text-black underline underline-offset-4">
+                            <Link to={m.href} className="t-label mt-3 inline-flex items-center gap-2 text-[var(--g-90)] underline underline-offset-4">
                               Open {m.n} <span className="t-num">→</span>
                             </Link>
                           </div>
@@ -768,7 +804,7 @@ const INDUSTRIES: [string, string][] = [
 function Industries() {
   const [active, setActive] = useState(0);
   return (
-    <section className="bg-black px-6 py-24 text-white md:px-10 md:py-36 lg:px-16">
+    <section className="s-0 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
@@ -867,7 +903,7 @@ function TileMedia({ p }: { p: Product }) {
 
 function Ecosystem() {
   return (
-    <section className="bg-[var(--paper)] px-6 py-24 md:px-10 md:py-36 lg:px-16">
+    <section className="s-1 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
@@ -935,7 +971,7 @@ const HARDWARE = [
 
 function Hardware() {
   return (
-    <section className="bg-black px-6 py-24 text-white md:px-10 md:py-36 lg:px-16">
+    <section className="s-0 px-6 py-24 md:px-10 md:py-36 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-10 lg:grid-cols-[1fr_auto] lg:items-end">
           <div>
@@ -986,7 +1022,7 @@ const MAP_EMBED =
 function Showroom() {
   const MAPS = 'https://www.google.com/maps/search/?api=1&query=Solaris+Dutamas+Publika+Kuala+Lumpur';
   return (
-    <section className="bg-[var(--paper)]">
+    <section className="s-1">
       <div className="mx-auto max-w-[1500px] px-6 pt-24 md:px-10 md:pt-36 lg:px-16">
         <SectionTag n="10">Proof</SectionTag>
         <div className="mt-10 grid gap-12 lg:grid-cols-[1.2fr_1fr] lg:gap-20 lg:items-end">
@@ -1044,9 +1080,9 @@ function Showroom() {
             ['Hours', 'Monday – Friday, 10AM – 7PM\nReservation required'],
             ['Origin', 'Designed in Tokyo\nDeployed and supported from Malaysia'],
           ].map(([k, v], i) => (
-            <Reveal key={k} delay={i * 90} className="bg-[var(--paper)] px-1 py-8 md:px-7">
+            <Reveal key={k} delay={i * 90} className="card px-1 py-8 md:px-7">
               <div className="t-label text-[var(--g-40)]">{k}</div>
-              <div className="t-small mt-3 whitespace-pre-line font-medium text-black">{v}</div>
+              <div className="t-small mt-3 whitespace-pre-line font-medium text-[var(--g-90)]">{v}</div>
             </Reveal>
           ))}
         </div>
@@ -1056,11 +1092,11 @@ function Showroom() {
             target="_blank"
             rel="noopener noreferrer"
             onClick={() => trackWhatsAppClick('HomeV3 > Showroom > Book a visit')}
-            className="t-label bg-black px-7 py-4 text-white transition-colors hover:bg-[var(--g-70)]"
+            className="t-label rounded-full bg-white px-8 py-4 text-black transition-colors hover:bg-white/85"
           >
             Book a visit
           </a>
-          <a href={MAPS} target="_blank" rel="noopener noreferrer" className="t-label border border-black/20 px-7 py-4 text-black transition-colors hover:border-black">
+          <a href={MAPS} target="_blank" rel="noopener noreferrer" className="t-label rounded-full border border-white/25 px-8 py-4 text-white transition-colors hover:border-white hover:bg-white hover:text-black">
             Get directions
           </a>
         </Reveal>
@@ -1072,7 +1108,7 @@ function Showroom() {
 /* ═══════════════ 12 · CLOSE ═══════════════ */
 function Close() {
   return (
-    <section className="bg-black px-6 py-28 text-white md:px-10 md:py-40 lg:px-16">
+    <section className="glow-top relative s-0 px-6 py-28 md:px-10 md:py-40 lg:px-16">
       <div className="mx-auto max-w-[1500px]">
         <MaskLines
           className="t-display max-w-[13ch]"
@@ -1090,11 +1126,11 @@ function Close() {
               target="_blank"
               rel="noopener noreferrer"
               onClick={() => trackWhatsAppClick('HomeV3 > Close > Book a demo')}
-              className="t-label bg-white px-8 py-4 text-black transition-colors hover:bg-white/85"
+              className="t-label rounded-full bg-white px-8 py-4 text-black transition-colors hover:bg-white/85"
             >
               Book a demo
             </a>
-            <Link to="/contact-us" className="t-label border border-white/25 px-8 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
+            <Link to="/contact-us" className="t-label rounded-full border border-white/25 px-8 py-4 transition-colors hover:border-white hover:bg-white hover:text-black">
               Talk to us
             </Link>
           </Reveal>
@@ -1120,7 +1156,7 @@ function Close() {
 /* ═══════════════ PAGE ═══════════════ */
 export default function HomeV3() {
   return (
-    <main className="v3 bg-[var(--paper)]">
+    <main className="v3 on-dark s-0">
       <SEOHead
         title="QBot — POS, Self-Service Kiosk & Commerce Platform | Malaysia"
         description="QBot builds the hardware and software businesses run on: counter POS, self-service kiosks, QR ordering, webstore and a 14-module cloud platform. 17 industries. Showroom in Publika KL."

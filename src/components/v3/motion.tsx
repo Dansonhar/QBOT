@@ -133,6 +133,52 @@ export function Counter({
 }
 
 /* ───────────────────────────────────────────────────────────────
+   Scroll progress as an element PASSES the viewport. Unlike
+   useScrollProgress this needs no travel of its own, so it drives
+   scroll-linked motion inside a section shorter than the screen:
+   0 when the element's top reaches `enter` (share of viewport
+   height), 1 once its bottom clears `exit`.
+   ─────────────────────────────────────────────────────────────── */
+export function useScrollPass<T extends HTMLElement = HTMLDivElement>(
+  enter = 0.9,
+  exit = 0.45,
+) {
+  const ref = useRef<T | null>(null);
+  const [p, setP] = useState(0);
+
+  useEffect(() => {
+    // Reduced motion gets the finished state, never the animation.
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) { setP(1); return; }
+
+    let raf = 0;
+    const measure = () => {
+      const el = ref.current;
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      const from = vh * enter;              // where the run begins
+      const to = vh * exit - r.height;      // where it ends
+      const span = from - to;
+      setP(span <= 0 ? 1 : Math.min(Math.max((from - r.top) / span, 0), 1));
+    };
+    const onScroll = () => {
+      if (raf) return;
+      raf = requestAnimationFrame(() => { raf = 0; measure(); });
+    };
+    measure();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    return () => {
+      window.removeEventListener('scroll', onScroll);
+      window.removeEventListener('resize', onScroll);
+      if (raf) cancelAnimationFrame(raf);
+    };
+  }, [enter, exit]);
+
+  return [ref, p] as const;
+}
+
+/* ───────────────────────────────────────────────────────────────
    Scroll progress through a tall section — powers sticky,
    scroll-driven storytelling. rAF-throttled so it never thrashes.
    Returns 0 → 1 across the section's scrollable travel.

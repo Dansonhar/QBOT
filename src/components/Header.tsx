@@ -50,13 +50,17 @@ export default function Header() {
   }, []);
 
   const solid = scrolled || !overHero || open !== null;
-  const fg = solid ? 'text-black' : 'text-white';
+  /* The homepage is dark end to end, so the bar stays dark there even once it
+     goes solid. `on-dark` re-points --paper/--rule, which carries the mega
+     panel and the mobile drawer with it. Other routes keep the paper bar. */
+  const dark = overHero;
+  const fg = solid && !dark ? 'text-black' : 'text-white';
 
   return (
     <header
       ref={navRef}
-      className={`v3 fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${
-        solid ? 'bg-[var(--paper-95)] backdrop-blur-md border-b border-[var(--rule)]' : 'bg-transparent'
+      className={`v3 fixed inset-x-0 top-0 z-50 transition-colors duration-500 ${dark ? 'on-dark' : ''} ${
+        solid ? 'bg-[var(--paper-95)] backdrop-blur-xl border-b border-[var(--rule)]' : 'bg-transparent'
       }`}
     >
       <div className="mx-auto flex h-[72px] max-w-[1500px] items-center gap-8 px-6 md:px-10 lg:px-16">
@@ -69,7 +73,7 @@ export default function Header() {
             aria-hidden="true"
             width={26}
             height={26}
-            className={`h-[26px] w-[26px] transition-[filter] duration-500 ${solid ? '' : 'invert'}`}
+            className={`h-[26px] w-[26px] transition-[filter] duration-500 ${solid && !dark ? '' : 'invert'}`}
           />
           <span className={`t-label text-[15px] font-bold tracking-[0.24em] ${fg}`}>QBOT</span>
         </Link>
@@ -100,8 +104,8 @@ export default function Header() {
             href="https://wa.me/60126909189?text=Hi%20QBot%2C%20I%27d%20like%20to%20book%20a%20demo"
             target="_blank"
             rel="noopener noreferrer"
-            className={`t-label hidden px-6 py-3 transition-colors sm:inline-block ${
-              solid ? 'bg-black text-white hover:bg-[var(--g-70)]' : 'bg-white text-black hover:bg-white/85'
+            className={`t-label hidden rounded-full px-6 py-3 transition-colors sm:inline-block ${
+              solid && !dark ? 'bg-black text-white hover:bg-[var(--g-70)]' : 'bg-white text-black hover:bg-white/85'
             }`}
           >
             Book a demo
@@ -134,8 +138,8 @@ export default function Header() {
                   <div className="t-label mb-5 text-[var(--g-40)]">{g.group}</div>
                   {g.items.map(([n, href]) => (
                     <Link key={href} to={href} className="group flex items-center justify-between border-t border-[var(--rule)] py-3 last:border-b">
-                      <span className="t-small font-medium text-[var(--g-50)] transition-colors group-hover:text-black">{n}</span>
-                      <span className="t-num text-[var(--g-20)] transition-transform group-hover:translate-x-0.5 group-hover:text-black">→</span>
+                      <span className="t-small font-medium text-[var(--g-50)] transition-colors group-hover:text-[var(--g-90)]">{n}</span>
+                      <span className="t-num text-[var(--g-20)] transition-transform group-hover:translate-x-0.5 group-hover:text-[var(--g-90)]">→</span>
                     </Link>
                   ))}
                 </div>
@@ -148,7 +152,7 @@ export default function Header() {
                 <Link key={href} to={href} className="group flex items-baseline gap-6 border-b border-[var(--rule)] py-6">
                   <span className="t-h3 shrink-0 transition-transform duration-500 group-hover:translate-x-1.5">{n}</span>
                   <span className="t-small text-[var(--g-50)]">{d}</span>
-                  <span className="t-num ml-auto text-[var(--g-20)] transition-all group-hover:translate-x-1 group-hover:text-black">→</span>
+                  <span className="t-num ml-auto text-[var(--g-20)] transition-all group-hover:translate-x-1 group-hover:text-[var(--g-90)]">→</span>
                 </Link>
               ))}
             </div>
@@ -186,7 +190,7 @@ export default function Header() {
             href="https://wa.me/60126909189?text=Hi%20QBot%2C%20I%27d%20like%20to%20book%20a%20demo"
             target="_blank"
             rel="noopener noreferrer"
-            className="t-label mt-8 block bg-black px-6 py-4 text-center text-white"
+            className="t-label mt-8 block rounded-full bg-[var(--g-90)] px-6 py-4 text-center text-[var(--paper)]"
           >
             Book a demo
           </a>
