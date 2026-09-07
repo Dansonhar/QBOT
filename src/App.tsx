@@ -6,23 +6,9 @@ import BottomNavBar from './components/BottomNavBar';
 import WhatsAppButton from './components/WhatsAppButton';
 import StructuredData from './components/StructuredData';
 import ScrollToTop from './components/ScrollToTop';
-import AdminPanel from './components/AdminPanel';
-import { AdminAuthProvider } from './contexts/AdminAuthContext';
 import { trackWhatsAppClick } from './utils/trackWhatsApp';
-import { MerchantAuthProvider } from './contexts/MerchantAuthContext';
-import MerchantAuthGuard from './components/merchant/MerchantAuthGuard';
 
 // Home page sections
-import Hero from './components/Hero';
-import IntegratedSystem from './components/IntegratedSystem';
-import SalesBoostersSection from './components/SalesBoostersSection';
-import KioskSection from './components/KioskSection';
-import ModulesGrid from './components/ModulesGrid';
-import IndustrySolutions from './components/IndustrySolutions';
-import StatsBar from './components/StatsBar';
-import ShowroomSection from './components/ShowroomSection';
-import CTASection from './components/CTASection';
-import YouTubeSection from './components/YouTubeSection';
 
 // Existing pages (repurposed)
 import SuperPOSLanding from './components/SuperPOSLanding';
@@ -95,6 +81,8 @@ const QFitQuotePage = lazy(() => import('./pages/QFitQuotePage'));
 const QFitPackagesPage = lazy(() => import('./pages/QFitPackagesPage'));
 
 // QStudio
+const AdminRoute = lazy(() => import('./AdminRoute'));
+const MerchantShell = lazy(() => import('./MerchantShell'));
 const HomeV3 = lazy(() => import('./pages/HomeV3'));
 const QStudioPage = lazy(() => import('./pages/QStudioPage'));
 const QStudioIntroPage = lazy(() => import('./pages/QStudioIntroPage'));
@@ -151,24 +139,6 @@ const RefundPage = lazy(() => import('./pages/RefundPage'));
 const AboutUsPage = lazy(() => import('./pages/AboutUsPage'));
 const ContactUsPage = lazy(() => import('./pages/ContactUsPage'));
 
-function HomePage() {
-  useEffect(() => { document.title = 'QPOS — 3-in-1 POS System Malaysia | Counter, Mobile & Kiosk in One Device'; }, []);
-
-  return (
-    <main>
-      <Hero />
-      <YouTubeSection />
-      <IntegratedSystem />
-      <SalesBoostersSection />
-      <KioskSection />
-      <ModulesGrid />
-      <IndustrySolutions />
-      <StatsBar />
-      <ShowroomSection />
-      <CTASection />
-    </main>
-  );
-}
 
 function ExternalRedirect({ url }: { url: string }) {
   useEffect(() => {
@@ -194,14 +164,6 @@ function ComingSoonPage({ title }: { title: string }) {
   );
 }
 
-function AdminPageWrapper() {
-  return (
-    <AdminAuthProvider>
-      <AdminPanel onBack={() => window.location.href = '/'} />
-    </AdminAuthProvider>
-  );
-}
-
 // Layout wrapper that shows site chrome (header, footer, nav) for normal pages
 function SiteLayout({ children }: { children: React.ReactNode }) {
   return (
@@ -221,12 +183,15 @@ function App() {
   const isAdminPage = window.location.pathname === '/admincms' || window.location.pathname === '/admincms/';
 
   if (isAdminPage) {
-    return <AdminPageWrapper />;
+    return (
+      <Suspense fallback={<div className="min-h-screen" />}>
+        <AdminRoute />
+      </Suspense>
+    );
   }
 
   return (
     <BrowserRouter>
-      <AdminAuthProvider>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-sm font-bold text-gray-400 uppercase tracking-wider">Loading...</div></div>}>
           <Routes>
             {/* Hosted pages — no site chrome */}
@@ -353,9 +318,9 @@ function App() {
                   <Route path="/tools/menu-qr" element={<MenuQrPage />} />
                   <Route path="/tools/wa-booking" element={<WaBookingPage />} />
                   <Route path="/tools/wa-order" element={<WaOrderLandingPage />} />
-                  <Route path="/tools/wa-order/login" element={<MerchantAuthProvider><WaOrderLoginPage /></MerchantAuthProvider>} />
-                  <Route path="/tools/wa-order/signup" element={<MerchantAuthProvider><WaOrderSignupPage /></MerchantAuthProvider>} />
-                  <Route path="/tools/wa-order/dashboard" element={<MerchantAuthProvider><MerchantAuthGuard><WaOrderDashboardPage /></MerchantAuthGuard></MerchantAuthProvider>} />
+                  <Route path="/tools/wa-order/login" element={<MerchantShell><WaOrderLoginPage /></MerchantShell>} />
+                  <Route path="/tools/wa-order/signup" element={<MerchantShell><WaOrderSignupPage /></MerchantShell>} />
+                  <Route path="/tools/wa-order/dashboard" element={<MerchantShell guard><WaOrderDashboardPage /></MerchantShell>} />
                   {/* Legacy tool routes */}
                   <Route path="/tools/pdf-menu" element={<PdfMenuPage />} />
                   <Route path="/tools/booking-qr" element={<BookingQrPage />} />
@@ -377,7 +342,6 @@ function App() {
             } />
           </Routes>
         </Suspense>
-      </AdminAuthProvider>
     </BrowserRouter>
   );
 }

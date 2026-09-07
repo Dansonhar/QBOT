@@ -48,11 +48,29 @@ function HeroMedia() {
     const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
     const cheap = conn?.saveData === true || /2g/.test(conn?.effectiveType ?? '');
 
-    const decide = () => setPlayVideo(wide.matches && !calm.matches && !cheap);
-    decide();
+    const eligible = () => wide.matches && !calm.matches && !cheap;
+
+    // Hold the video back until the page has finished loading. It is several MB
+    // and would otherwise compete with the first paint for bandwidth; the poster
+    // carries the hero until then.
+    let idle = 0;
+    const start = () => {
+      const ric = (window as unknown as { requestIdleCallback?: (cb: () => void, o?: { timeout: number }) => number }).requestIdleCallback;
+      idle = ric ? ric(() => setPlayVideo(eligible()), { timeout: 2500 })
+                 : window.setTimeout(() => setPlayVideo(eligible()), 900);
+    };
+    if (document.readyState === 'complete') start();
+    else window.addEventListener('load', start, { once: true });
+
+    const decide = () => setPlayVideo(v => (v ? eligible() : v));
     wide.addEventListener('change', decide);
     calm.addEventListener('change', decide);
     return () => {
+      window.removeEventListener('load', start);
+      if (idle) {
+        const cic = (window as unknown as { cancelIdleCallback?: (h: number) => void }).cancelIdleCallback;
+        cic ? cic(idle) : clearTimeout(idle);
+      }
       wide.removeEventListener('change', decide);
       calm.removeEventListener('change', decide);
     };
