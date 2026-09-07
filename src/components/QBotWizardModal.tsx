@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import { X, Check, ArrowRight, ArrowLeft } from 'lucide-react';
 import { IndustryWizard, Question } from '../data/wizardQuestions';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 interface QBotWizardModalProps {
   industry: IndustryWizard;

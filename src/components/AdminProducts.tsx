@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Plus, Edit2, Trash2, Save, X, Eye, EyeOff } from 'lucide-react';
 import { Product } from '../types/configurator';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 export default function AdminProducts() {
   const [products, setProducts] = useState<Product[]>([]);
