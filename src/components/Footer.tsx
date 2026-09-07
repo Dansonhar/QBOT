@@ -19,7 +19,17 @@ export default function Footer() {
       <div className="mx-auto max-w-[1500px]">
         <div className="grid gap-12 lg:grid-cols-[1.1fr_2fr] lg:gap-20">
           <div>
-            <div className="t-label text-[15px] font-bold tracking-[0.24em]">QBOT</div>
+            <div className="flex items-center gap-2.5">
+              <img
+                src="/qbotlogo.svg"
+                alt=""
+                aria-hidden="true"
+                width={28}
+                height={28}
+                className="h-7 w-7 invert"
+              />
+              <span className="t-label text-[15px] font-bold tracking-[0.24em]">QBOT</span>
+            </div>
             <p className="t-small mt-5 max-w-xs text-white/45">
               Self-service kiosks, all-in-one POS devices, and the platform behind them.
               Designed in Tokyo. Deployed and supported from Malaysia.

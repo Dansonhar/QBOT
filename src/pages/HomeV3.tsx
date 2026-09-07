@@ -82,7 +82,7 @@ function HeroMedia() {
         src="/video/qios-poster.jpg"
         alt="QBot self-service kiosk and POS hardware in use"
         decoding="async"
-        className="h-full w-full scale-105 object-cover object-center opacity-[0.6] md:opacity-[0.85] md:object-[72%_center]"
+        className="h-full w-full object-cover object-center"
       />
     );
   }
@@ -97,7 +97,7 @@ function HeroMedia() {
       preload="auto"
       poster="/video/qios-poster.jpg"
       aria-hidden="true"
-      className="h-full w-full scale-105 object-cover object-center opacity-[0.85] md:object-[72%_center]"
+      className="h-full w-full object-cover object-center"
     >
       {/* VP9 first: smaller, and covers Chromium builds shipped without H.264 */}
       <source src="/video/qios.webm" type="video/webm" />

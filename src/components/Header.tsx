@@ -60,8 +60,18 @@ export default function Header() {
       }`}
     >
       <div className="mx-auto flex h-[72px] max-w-[1500px] items-center gap-8 px-6 md:px-10 lg:px-16">
-        <Link to="/" className={`t-label shrink-0 text-[15px] font-bold tracking-[0.24em] ${fg}`} aria-label="QBot home">
-          QBOT
+        <Link to="/" className="flex shrink-0 items-center gap-2.5" aria-label="QBot home">
+          {/* The mark is solid black artwork; invert it while the bar is
+              transparent over the dark hero, then let it return to black. */}
+          <img
+            src="/qbotlogo.svg"
+            alt=""
+            aria-hidden="true"
+            width={26}
+            height={26}
+            className={`h-[26px] w-[26px] transition-[filter] duration-500 ${solid ? '' : 'invert'}`}
+          />
+          <span className={`t-label text-[15px] font-bold tracking-[0.24em] ${fg}`}>QBOT</span>
         </Link>
 
         {/* desktop nav */}
