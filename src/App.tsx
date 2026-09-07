@@ -191,7 +191,7 @@ function App() {
   }
 
   return (
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL.replace(/\/$/, '')}>
         <Suspense fallback={<div className="min-h-screen flex items-center justify-center"><div className="text-sm font-bold text-gray-400 uppercase tracking-wider">Loading...</div></div>}>
           <Routes>
             {/* Hosted pages — no site chrome */}
