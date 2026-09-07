@@ -2,11 +2,8 @@ import { useState, useEffect } from 'react';
 import { Scissors, UtensilsCrossed, Car, Building, Dumbbell, ShoppingBag, Briefcase, ParkingCircle, Tablet, Sparkles, Stethoscope, GraduationCap, BookOpen, Film, CalendarDays, Landmark, Bus, Building2, Gift, Ticket } from 'lucide-react';
 import ProductConfigurator from './ProductConfigurator';
 import { IndustryType } from '../types/configurator';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '../lib/supabase';
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
-const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
 const industryIcons: Record<string, any> = {
   salon: Scissors,
