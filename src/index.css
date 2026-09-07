@@ -269,7 +269,9 @@
    to zero area also zeroes its IntersectionObserver rect, so a clip-path mask
    hides itself from the very trigger meant to release it. The curtain leaves
    the element's box intact, so the observer still fires. */
-.v3 [data-mask] { position: relative; }
+/* overflow:hidden is load-bearing — the curtain slides out of the box on
+   reveal, and without clipping it keeps painting over whatever sits below. */
+.v3 [data-mask] { position: relative; overflow: hidden; }
 .v3 [data-mask]::after {
   content: '';
   position: absolute;

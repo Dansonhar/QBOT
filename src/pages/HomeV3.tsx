@@ -667,13 +667,41 @@ function Industries() {
 }
 
 /* ═══════════════ 09 · ECOSYSTEM ═══════════════ */
-const ECOSYSTEM = [
-  { n: 'QPOS',      d: 'Commerce platform — six selling surfaces, fourteen modules.', href: '/products',  img: '/qpos-keyvisuals/hero-qpos.webp' },
-  { n: 'QStudio',   d: 'Memberships, recurring payments, bookings and appointments.', href: '/qstudio',   img: '/qfitimg/studioimg/for_gym.png' },
-  { n: 'QSentry AI',d: 'AI camera that watches operations and flags what staff miss.', href: '/qsentry',  img: '/qsentry_img/sentryrealfootage.jpg' },
-  { n: 'QSecurity', d: 'Visitor registration, face-ID access, guard patrol oversight.', href: '/qsecurity', img: '/qsecurity/qsc__0000_faceid.jpg' },
-  { n: 'QProp',     d: 'Self-service check-in and door-lock control for property stays.', href: '/qprop', img: '/cover/cover-propertymanagement.webp' },
+/* `video` is optional on every tile — drop a path in and that tile plays
+   instead of showing its still, no other change required. */
+type Product = { n: string; d: string; href: string; img: string; video?: string; tag?: string };
+
+const CORE: Product = {
+  n: 'QPOS',
+  d: 'The commerce core — six selling surfaces, fourteen modules, one catalogue.',
+  href: '/products',
+  img: '/qpos-keyvisuals/hero-desktop.webp',
+  tag: 'The core',
+};
+
+const BUILT_ON: Product[] = [
+  { n: 'QStudio',    d: 'Memberships, recurring payments, bookings and appointments.', href: '/qstudio',   img: '/qfitimg/studioimg/01_membership.jpg' },
+  { n: 'QSentry AI', d: 'AI camera that watches operations and flags what staff miss.', href: '/qsentry',  img: '/qsentry_img/qsentry-poster.webp' },
+  { n: 'QSecurity',  d: 'Visitor registration, face-ID access and guard patrol.',       href: '/qsecurity', img: '/qsecurity/qsc__0000_faceid.jpg' },
+  { n: 'QProp',      d: 'Self check-in and door-lock control for property stays.',      href: '/qprop',     img: '/cover/cover-propertymanagement.webp' },
 ];
+
+function TileMedia({ p }: { p: Product }) {
+  const common = 'absolute inset-0 h-full w-full object-cover transition-transform duration-[1100ms] ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:scale-[1.06]';
+  if (p.video) {
+    return (
+      <video
+        autoPlay muted loop playsInline preload="none"
+        poster={p.img}
+        aria-hidden="true"
+        className={common}
+      >
+        <source src={p.video} type="video/mp4" />
+      </video>
+    );
+  }
+  return <img src={p.img} alt="" aria-hidden="true" loading="lazy" decoding="async" className={common} />;
+}
 
 function Ecosystem() {
   return (
@@ -690,23 +718,44 @@ function Ecosystem() {
           </Reveal>
         </div>
 
-        <div className="mt-16 hairline">
-          {ECOSYSTEM.map((e, k) => (
-            <Reveal key={e.n} delay={k * 70}>
-              <Link
-                to={e.href}
-                className="group relative flex items-center gap-6 border-b border-[var(--rule)] py-7 md:py-9"
-              >
-                <span className="t-num w-10 shrink-0 text-xs text-[var(--g-40)]">{String(k + 1).padStart(2, '0')}</span>
-                <span className="t-h2 shrink-0 transition-transform duration-500 group-hover:translate-x-2">{e.n}</span>
-                <span className="t-small hidden flex-1 text-[var(--g-50)] md:block">{e.d}</span>
-                {/* hover-revealed thumbnail — the reward for exploring */}
-                <span className="pointer-events-none absolute right-16 top-1/2 hidden h-24 w-40 -translate-y-1/2 overflow-hidden opacity-0 transition-opacity duration-500 group-hover:opacity-100 lg:block">
-                  <img src={e.img} alt="" aria-hidden="true" loading="lazy" className="h-full w-full object-cover" />
+        {/* the core — one wide tile carrying the most weight */}
+        <Reveal mask curtain="paper" delay={80} className="mt-14 md:mt-20">
+          <Link to={CORE.href} className="group relative block h-[52vh] min-h-[340px] overflow-hidden bg-black md:h-[58vh]">
+            <TileMedia p={CORE} />
+            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/35 to-transparent" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/65 via-black/15 to-transparent" />
+            <div className="relative flex h-full flex-col justify-end p-7 text-white md:p-12">
+              <div className="t-label mb-4 flex items-center gap-3 text-white/55">
+                <span>01</span><span className="h-px w-8 bg-white/30" /><span>{CORE.tag}</span>
+              </div>
+              <h3 className="t-h1">{CORE.n}</h3>
+              <div className="mt-4 flex flex-wrap items-end justify-between gap-5">
+                <p className="t-body max-w-md text-white/65">{CORE.d}</p>
+                <span className="t-label inline-flex items-center gap-3 border-b border-white/40 pb-1 transition-all group-hover:gap-5 group-hover:border-white">
+                  Explore <span className="t-num">→</span>
                 </span>
-                <span className="t-num ml-auto shrink-0 text-[var(--g-20)] transition-all duration-500 group-hover:translate-x-1 group-hover:text-black">→</span>
+              </div>
+            </div>
+          </Link>
+        </Reveal>
+
+        {/* built on top — four tall tiles */}
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {BUILT_ON.map((p, k) => (
+            <Reveal key={p.n} mask curtain="paper" delay={k * 100}>
+              <Link to={p.href} className="group relative block aspect-[3/4] overflow-hidden bg-black">
+                <TileMedia p={p} />
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/55 to-black/5 transition-opacity duration-700 group-hover:from-black/95" />
+                <div className="relative flex h-full flex-col justify-end p-6 text-white">
+                  <div className="t-num mb-3 text-xs text-white/45">{String(k + 2).padStart(2, '0')}</div>
+                  <h3 className="t-h3 text-[22px] leading-tight transition-transform duration-500 group-hover:-translate-y-0.5">{p.n}</h3>
+                  {/* description rides up on hover at desktop width; always shown on touch */}
+                  <p className="t-small mt-2 text-white/60 lg:max-h-0 lg:translate-y-2 lg:overflow-hidden lg:opacity-0 lg:transition-all lg:duration-500 lg:group-hover:max-h-32 lg:group-hover:translate-y-0 lg:group-hover:opacity-100">
+                    {p.d}
+                  </p>
+                  <span className="t-num mt-4 inline-block text-white/50 transition-all duration-500 group-hover:translate-x-1 group-hover:text-white">→</span>
+                </div>
               </Link>
-              <span className="t-small block pb-6 text-[var(--g-50)] md:hidden">{e.d}</span>
             </Reveal>
           ))}
         </div>
