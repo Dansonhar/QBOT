@@ -33,6 +33,60 @@ function SectionTag({ n, children, invert = false }: { n: string; children: stri
   );
 }
 
+/* Hero background media.
+   The video is 6.3MB, so it is only fetched when it will actually be seen and
+   is worth the bytes: wide viewport, not a data-saver connection, and motion
+   not reduced. Everyone else gets the poster frame, which is 18KB. */
+function HeroMedia() {
+  const [playVideo, setPlayVideo] = useState(false);
+
+  useEffect(() => {
+    const wide = window.matchMedia('(min-width: 768px)');
+    const calm = window.matchMedia('(prefers-reduced-motion: reduce)');
+    // navigator.connection is Chromium-only; absence just means "no signal"
+    const conn = (navigator as unknown as { connection?: { saveData?: boolean; effectiveType?: string } }).connection;
+    const cheap = conn?.saveData === true || /2g/.test(conn?.effectiveType ?? '');
+
+    const decide = () => setPlayVideo(wide.matches && !calm.matches && !cheap);
+    decide();
+    wide.addEventListener('change', decide);
+    calm.addEventListener('change', decide);
+    return () => {
+      wide.removeEventListener('change', decide);
+      calm.removeEventListener('change', decide);
+    };
+  }, []);
+
+  if (!playVideo) {
+    return (
+      <img
+        src="/video/qios-poster.jpg"
+        alt="QBot self-service kiosk and POS hardware in use"
+        decoding="async"
+        className="h-full w-full scale-105 object-cover object-center opacity-[0.72]"
+      />
+    );
+  }
+
+  return (
+    <video
+      key="hero-video"
+      autoPlay
+      muted
+      loop
+      playsInline
+      preload="auto"
+      poster="/video/qios-poster.jpg"
+      aria-hidden="true"
+      className="h-full w-full scale-105 object-cover object-center opacity-[0.72]"
+    >
+      {/* VP9 first: smaller, and covers Chromium builds shipped without H.264 */}
+      <source src="/video/qios.webm" type="video/webm" />
+      <source src="/video/qios.mp4" type="video/mp4" />
+    </video>
+  );
+}
+
 /* ═══════════════ 01 · HERO ═══════════════ */
 function Hero() {
   const facts = [
@@ -43,14 +97,9 @@ function Hero() {
   ];
   return (
     <section className="relative min-h-[100svh] bg-black text-white flex flex-col overflow-hidden">
-      {/* Full-bleed key visual — the three-mode triptych, held back so type leads */}
+      {/* Full-bleed key visual — video where it's worth the bytes, poster otherwise */}
       <div className="absolute inset-0">
-        <img
-          src="/qpos-keyvisuals/hero-3in1.webp"
-          alt="QBOT V3 MIX shown in counter, kiosk and handheld modes"
-          decoding="async"
-          className="h-full w-full object-cover object-center opacity-[0.72] scale-105"
-        />
+        <HeroMedia />
         <div className="absolute inset-0 bg-gradient-to-b from-black via-black/45 to-black" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/85 via-transparent to-black/60" />
       </div>
