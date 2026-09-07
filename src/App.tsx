@@ -95,6 +95,7 @@ const QFitQuotePage = lazy(() => import('./pages/QFitQuotePage'));
 const QFitPackagesPage = lazy(() => import('./pages/QFitPackagesPage'));
 
 // QStudio
+const HomeV3 = lazy(() => import('./pages/HomeV3'));
 const QStudioPage = lazy(() => import('./pages/QStudioPage'));
 const QStudioIntroPage = lazy(() => import('./pages/QStudioIntroPage'));
 // Growth Partner — special-partnership presentation (noindex, robots-blocked, unlisted)
@@ -289,7 +290,8 @@ function App() {
               <SiteLayout>
                 <Routes>
                   {/* Home */}
-                  <Route path="/" element={<V2Page />} />
+                  <Route path="/" element={<HomeV3 />} />
+                  <Route path="/legacy-home" element={<V2Page />} />
                   <Route path="/build" element={<ComingSoonPage title="Build Your POS" />} />
                   <Route path="/3-in-1" element={<ThreeInOnePage />} />
                   <Route path="/custom-pos" element={<CustomPosPage />} />
